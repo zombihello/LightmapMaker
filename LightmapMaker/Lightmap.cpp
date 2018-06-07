@@ -1,4 +1,4 @@
-#include "Lightmap.h"
+﻿#include "Lightmap.h"
 
 //-------------------------------------------------------------------------//
 
@@ -73,7 +73,7 @@ void Lightmap::Generate( size_t Size, vector<Triangle>& Triangles, vector<PointL
 				Triangle->LightMap.SetPixel( x, y, Color );
 			}
 
-		Triangle->LightMap.SaveInFile( DirectoryLightmaps + "/lm_" + to_string(Id) + ".png" );
+		Triangle->LightMap.SaveInFile( DirectoryLightmaps + "\\lm_" + to_string(Id) + ".png" );
 	}
 
 	PRINT_LOG( "- Lightmaps Generated" );

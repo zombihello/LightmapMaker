@@ -1,10 +1,10 @@
-//////////////////////////////////////////////////////////////////////////
+п»ї//////////////////////////////////////////////////////////////////////////
 // 
 //				*** LightmapMaker ***
 //				  Copyright (C) 2018
 //
-// Связь со мной:		https://vk.com/zombihello
-// Репозиторий движка:  https://github.com/zombihello/LightmapMaker
+// РЎРІСЏР·СЊ СЃРѕ РјРЅРѕР№:		https://vk.com/zombihello
+// Р РµРїРѕР·РёС‚РѕСЂРёР№ РґРІРёР¶РєР°:  https://github.com/zombihello/LightmapMaker
 // 
 //////////////////////////////////////////////////////////////////////////
 
@@ -24,10 +24,10 @@
 class PointLight
 {
 public:
-	/* Конструктор */
+	/* РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ */
 	PointLight();
 
-	/* Конструктор */
+	/* РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ */
 	PointLight( TiXmlElement& ElementEntity );
 
 	float			Intensivity;

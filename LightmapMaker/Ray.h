@@ -1,10 +1,10 @@
-//////////////////////////////////////////////////////////////////////////
+п»ї//////////////////////////////////////////////////////////////////////////
 // 
 //				*** LightmapMaker ***
 //				  Copyright (C) 2018
 //
-// Связь со мной:		https://vk.com/zombihello
-// Репозиторий движка:  https://github.com/zombihello/LightmapMaker
+// РЎРІСЏР·СЊ СЃРѕ РјРЅРѕР№:		https://vk.com/zombihello
+// Р РµРїРѕР·РёС‚РѕСЂРёР№ РґРІРёР¶РєР°:  https://github.com/zombihello/LightmapMaker
 // 
 //////////////////////////////////////////////////////////////////////////
 
@@ -24,10 +24,10 @@
 class Ray
 {
 public:
-	/* Задать луч */
+	/* Р—Р°РґР°С‚СЊ Р»СѓС‡ */
 	void SetRay( const glm::vec3& StartRay, const glm::vec3& EndRay );
 
-	/* Пересикает ли луч треугольник */
+	/* РџРµСЂРµСЃРёРєР°РµС‚ Р»Рё Р»СѓС‡ С‚СЂРµСѓРіРѕР»СЊРЅРёРє */
 	bool IntersectTriangle( Triangle& Triangle );
 
 	glm::vec3 StartRay;

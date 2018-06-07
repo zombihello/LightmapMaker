@@ -1,10 +1,10 @@
-//////////////////////////////////////////////////////////////////////////
+п»ї//////////////////////////////////////////////////////////////////////////
 // 
 //				*** LightmapMaker ***
 //				  Copyright (C) 2018
 //
-// Связь со мной:		https://vk.com/zombihello
-// Репозиторий движка:  https://github.com/zombihello/LightmapMaker
+// вЂ”РІВ¤Р·СЊ СЃРѕ РјРЅРѕР№:		https://vk.com/zombihello
+// вЂ“РµРїРѕР·РёС‚РѕСЂРёР№ РґРІРёР¶РєР°:  https://github.com/zombihello/LightmapMaker
 // 
 //////////////////////////////////////////////////////////////////////////
 
@@ -14,7 +14,7 @@
 #define PRINT_LOG( X ) Logger::Log << X << endl; cout << X << endl;
 
 ///////////////////////////
-// СИСТЕМНЫЕ БИБЛИОТЕКИ
+// вЂ”В»вЂ”вЂњв‰€С›РЊСџв‰€ Р…В»Р…Р‹В»СњвЂњв‰€В В»
 ///////////////////////////
 #include <iostream>
 #include <fstream>
@@ -24,10 +24,10 @@ using namespace std;
 class Logger
 {
 public:
-	/* Сохранить логи в файл */
+	/* вЂ”РѕС…СЂР°РЅРёС‚СЊ Р»РѕРіРё РІ С„Р°Р№Р» */
 	static void SaveInFile( const string& Route );
 
-	/* Очистить логи */
+	/* СњС‡РёСЃС‚РёС‚СЊ Р»РѕРіРё */
 	static void Clear();
 
 	static stringstream		Log;

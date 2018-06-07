@@ -1,10 +1,10 @@
-//////////////////////////////////////////////////////////////////////////
+п»ї//////////////////////////////////////////////////////////////////////////
 // 
 //				*** LightmapMaker ***
 //				  Copyright (C) 2018
 //
-// Связь со мной:		https://vk.com/zombihello
-// Репозиторий движка:  https://github.com/zombihello/LightmapMaker
+// вЂ”РІВ¤Р·СЊ СЃРѕ РјРЅРѕР№:		https://vk.com/zombihello
+// вЂ“РµРїРѕР·РёС‚РѕСЂРёР№ РґРІРёР¶РєР°:  https://github.com/zombihello/LightmapMaker
 // 
 //////////////////////////////////////////////////////////////////////////
 
@@ -12,7 +12,7 @@
 #define LIGHTMAP_H
 
 ///////////////////////////
-// СИСТЕМНЫЕ БИБЛИОТЕКИ
+// вЂ”В»вЂ”вЂњв‰€С›РЊСџв‰€ Р…В»Р…Р‹В»СњвЂњв‰€В В»
 ///////////////////////////
 #include <vector>
 #include <string>
@@ -27,10 +27,10 @@ using namespace std;
 class Lightmap
 {
 public:
-	/* Сгенерировать карту освещения */
+	/* вЂ”РіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РєР°СЂС‚Сѓ РѕСЃРІРµС‰РµРЅРёВ¤ */
 	static void Generate( size_t Size, vector<Triangle>& Triangles, vector<PointLight>& PointLights );
 	
-	/* Задать директорию в которую будут сохраняться освещение */
+	/* В«Р°РґР°С‚СЊ РґРёСЂРµРєС‚РѕСЂРёСЋ РІ РєРѕС‚РѕСЂСѓСЋ Р±СѓРґСѓС‚ СЃРѕС…СЂР°РЅВ¤С‚СЊСЃВ¤ РѕСЃРІРµС‰РµРЅРёРµ */
 	static void SetDirectoryForLightmaps( const string& Directory );
 
 private:

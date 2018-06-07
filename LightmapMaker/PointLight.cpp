@@ -1,5 +1,5 @@
-///////////////////////////
-// СИСТЕМНЫЕ БИБЛИОТЕКИ
+п»ї///////////////////////////
+// РЎРРЎРўР•РњРќР«Р• Р‘РР‘Р›РРћРўР•РљР
 ///////////////////////////
 #include <sstream>
 using namespace std;
@@ -22,7 +22,7 @@ PointLight::PointLight( TiXmlElement& ElementEntity ) :
 	Color( 153.f, 153.f, 153.f, 255.f )
 {
 	// ***************************************** //
-	// Загружаем позицию источника в мире
+	// Р—Р°РіСЂСѓР¶Р°РµРј РїРѕР·РёС†РёСЋ РёСЃС‚РѕС‡РЅРёРєР° РІ РјРёСЂРµ
 
 	TiXmlElement* position;
 	position = ElementEntity.FirstChildElement( "Position" );
@@ -35,7 +35,7 @@ PointLight::PointLight( TiXmlElement& ElementEntity ) :
 	}
 
 	// ***************************************** //
-	// Загружаем свойства света
+	// Р—Р°РіСЂСѓР¶Р°РµРј СЃРІРѕР№СЃС‚РІР° СЃРІРµС‚Р°
 
 	TiXmlElement* Value;
 	string NameValue;
