@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LightmapMaker", "LightmapMaker\LightmapMaker.vcxproj", "{9A3C88EA-FFA5-4823-B808-B9B6BDC6C865}"
+	ProjectSection(ProjectDependencies) = postProject
+		{39163E21-D147-32A6-948B-5002B8B569B8} = {39163E21-D147-32A6-948B-5002B8B569B8}
+		{F83A04F7-EAA5-4D73-A1F5-A4D8ABEA6155} = {F83A04F7-EAA5-4D73-A1F5-A4D8ABEA6155}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glm", "LightmapMaker\Utils\OpenGL\glm\glm\glm_static.vcxproj", "{39163E21-D147-32A6-948B-5002B8B569B8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XML", "LightmapMaker\Utils\XML\XML.vcxproj", "{F83A04F7-EAA5-4D73-A1F5-A4D8ABEA6155}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{98BF2EDA-E6D3-4A18-9095-7D673F62A759}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9A3C88EA-FFA5-4823-B808-B9B6BDC6C865}.Debug|x64.ActiveCfg = Debug|x64
+		{9A3C88EA-FFA5-4823-B808-B9B6BDC6C865}.Debug|x64.Build.0 = Debug|x64
+		{9A3C88EA-FFA5-4823-B808-B9B6BDC6C865}.Debug|x86.ActiveCfg = Debug|Win32
+		{9A3C88EA-FFA5-4823-B808-B9B6BDC6C865}.Debug|x86.Build.0 = Debug|Win32
+		{9A3C88EA-FFA5-4823-B808-B9B6BDC6C865}.Release|x64.ActiveCfg = Release|x64
+		{9A3C88EA-FFA5-4823-B808-B9B6BDC6C865}.Release|x64.Build.0 = Release|x64
+		{9A3C88EA-FFA5-4823-B808-B9B6BDC6C865}.Release|x86.ActiveCfg = Release|Win32
+		{9A3C88EA-FFA5-4823-B808-B9B6BDC6C865}.Release|x86.Build.0 = Release|Win32
+		{39163E21-D147-32A6-948B-5002B8B569B8}.Debug|x64.ActiveCfg = Debug|Win32
+		{39163E21-D147-32A6-948B-5002B8B569B8}.Debug|x86.ActiveCfg = Debug|Win32
+		{39163E21-D147-32A6-948B-5002B8B569B8}.Debug|x86.Build.0 = Debug|Win32
+		{39163E21-D147-32A6-948B-5002B8B569B8}.Release|x64.ActiveCfg = Release|Win32
+		{39163E21-D147-32A6-948B-5002B8B569B8}.Release|x86.ActiveCfg = Release|Win32
+		{39163E21-D147-32A6-948B-5002B8B569B8}.Release|x86.Build.0 = Release|Win32
+		{F83A04F7-EAA5-4D73-A1F5-A4D8ABEA6155}.Debug|x64.ActiveCfg = Debug|Win32
+		{F83A04F7-EAA5-4D73-A1F5-A4D8ABEA6155}.Debug|x86.ActiveCfg = Debug|Win32
+		{F83A04F7-EAA5-4D73-A1F5-A4D8ABEA6155}.Debug|x86.Build.0 = Debug|Win32
+		{F83A04F7-EAA5-4D73-A1F5-A4D8ABEA6155}.Release|x64.ActiveCfg = Release|Win32
+		{F83A04F7-EAA5-4D73-A1F5-A4D8ABEA6155}.Release|x86.ActiveCfg = Release|Win32
+		{F83A04F7-EAA5-4D73-A1F5-A4D8ABEA6155}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{39163E21-D147-32A6-948B-5002B8B569B8} = {98BF2EDA-E6D3-4A18-9095-7D673F62A759}
+		{F83A04F7-EAA5-4D73-A1F5-A4D8ABEA6155} = {98BF2EDA-E6D3-4A18-9095-7D673F62A759}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {436936AC-CD6D-4F12-A879-5672093DA40F}
+	EndGlobalSection
+EndGlobal

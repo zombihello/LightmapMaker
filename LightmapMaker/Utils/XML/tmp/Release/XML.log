@@ -1,0 +1,5 @@
+﻿  tinystr.cpp
+  tinyxml.cpp
+  tinyxmlerror.cpp
+  tinyxmlparser.cpp
+  XML.vcxproj -> E:\Egor\projects\C++\GameEngine\LightmapMaker\LightmapMaker\Utils\XML\.\lib\XML.lib
