@@ -33,6 +33,7 @@ public:
 	glm::vec3 StartRay;
 	glm::vec3 EndRay;
 	glm::vec3 Direction;
+	glm::vec3 Reverse_Direction;
 	glm::vec3 Normalize_Direction;
 };
 

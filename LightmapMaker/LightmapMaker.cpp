@@ -8,7 +8,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////
 
-#define LIGHTMAPMAKER "LightmapMaker 1.0.1"
+#define LIGHTMAPMAKER "LightmapMaker 1.0.2"
 
 ///////////////////////////
 // СИСТЕМНЫЕ БИБЛИОТЕКИ
@@ -79,6 +79,9 @@ int main( int argc, char** argv )
 	{
 		InitRoutes( argv[ 1 ] );
 
+		if ( argc > 3 && strstr( argv[ 3 ], "-shadow" ) )
+			Lightmap::EnableShadows( true );
+
 		PRINT_LOG( "  - Route to map: " << argv[ 1 ] );
 		PRINT_LOG( "  - Size Lightmap: " << argv[ 2 ] );
 		PRINT_LOG( "" );
@@ -96,7 +99,13 @@ int main( int argc, char** argv )
 		Lightmap::Generate( atoi( argv[ 2 ] ), Level.GetTriangles(), Level.GetPointLights() );
 	}
 	else
-		cout << "usage: lm <route_to_map> <size_light_maps>\n";
+	{
+		cout << "Must Be Run With Parameter: \n";
+		cout << "lm.exe [File.lmap] [Size Lightmaps] [-shadow]\n";
+		cout << " -shadow: Enable Shadows In Lightmaps\n";
+		system( "pause" );
+		return 0;
+	}
 
 	Logger::SaveInFile( "Build.log" );
 	system( "pause" );

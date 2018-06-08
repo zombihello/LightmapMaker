@@ -7,7 +7,8 @@ void Ray::SetRay( const glm::vec3& StartRay, const glm::vec3& EndRay )
 	this->StartRay = StartRay;
 	this->EndRay = EndRay;
 
-	Direction = EndRay - StartRay;
+	Direction = StartRay - EndRay;
+	Reverse_Direction = -Direction;
 	Normalize_Direction = glm::normalize( Direction );
 }
 
@@ -24,7 +25,7 @@ bool Ray::IntersectTriangle( Triangle& Triangle )
 	if ( Dist1 == Dist2 )
 		return false;
 
-	glm::vec3 Tmp = StartRay + Direction * ( -Dist1 / ( Dist2 - Dist1 ) );
+	glm::vec3 Tmp = StartRay + Reverse_Direction * ( -Dist1 / ( Dist2 - Dist1 ) );
 
 	glm::vec3 vTest;
 

@@ -136,6 +136,8 @@ Triangle::Triangle( const glm::vec3 & Vertex_A, const glm::vec3 & Vertex_B, cons
 	Edge2 = Vect2 - UVVector;
 }
 
+//-------------------------------------------------------------------------//
+
 bool Triangle::operator!=( Triangle& Triangle )
 {
 	return 

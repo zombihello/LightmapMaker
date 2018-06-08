@@ -43,8 +43,6 @@ void Image::Create( size_t Width, size_t Height, const glm::vec4& Color )
 void Image::SaveInFile( const string& Route )
 {
 	stbi_write_png( Route.c_str(), Size.x, Size.y, 4, Pixels.data(), Size.x * 4 );
-
-	PRINT_LOG( " - Save Image In File: " << Route );
 }
 
 //-------------------------------------------------------------------------//

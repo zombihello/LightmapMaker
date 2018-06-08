@@ -87,7 +87,7 @@ bool Level::LoadLevel( const string& Route )
 				Vertex = Vertex->NextSiblingElement();
 			}
 
-			for ( size_t i = 0, Id = 0; i < IdVertex.size() / 3; i++, Id+=3 )
+			for ( size_t i = 0, Id = 0; i < IdVertex.size() / 3; i++, Id += 3 )
 				Triangles.push_back( Triangle( Vertexs[ IdVertex[ Id ] ], Vertexs[ IdVertex[ Id + 1 ] ], Vertexs[ IdVertex[ Id + 2 ] ] ) );
 
 			Vertexs.clear();
@@ -119,19 +119,19 @@ bool Level::LoadLevel( const string& Route )
 			PointLight PointLight( *Entity );
 			PointLights.push_back( PointLight );
 
-			PRINT_LOG(" - Add Point Light");
+			PRINT_LOG( " - Add Point Light" );
 			PRINT_LOG( "   Intensivity: " << PointLight.Intensivity );
 			PRINT_LOG( "   Radius: " << PointLight.Radius );
 			PRINT_LOG( "   Color: " << PointLight.Color.x << ", " << PointLight.Color.y << ", " << PointLight.Color.z << ", " << PointLight.Color.w );
 			PRINT_LOG( "   Position: " << PointLight.Position.x << ", " << PointLight.Position.y << ", " << PointLight.Position.z );
-			PRINT_LOG( "" );
+			PRINT_LOG( "	****\n" );
 		}
 
 		Entity = Entity->NextSiblingElement();
 	}
 
 	PRINT_LOG( " - Total Triangles: " << Triangles.size() );
-	PRINT_LOG(" - Total Point Lights: " << PointLights.size() );
+	PRINT_LOG( " - Total Point Lights: " << PointLights.size() );
 	PRINT_LOG( "- Level Loaded" );
 	return true;
 }
