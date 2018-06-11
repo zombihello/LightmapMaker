@@ -15,6 +15,7 @@
 // —»—“≈ћЌџ≈ Ѕ»ЅЋ»ќ“≈ »
 ///////////////////////////
 #include <vector>
+#include <fstream>
 using namespace std;
 
 ////////////////

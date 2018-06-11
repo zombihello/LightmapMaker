@@ -26,7 +26,6 @@ bool Ray::IntersectTriangle( Triangle& Triangle )
 		return false;
 
 	glm::vec3 Tmp = StartRay + Reverse_Direction * ( -Dist1 / ( Dist2 - Dist1 ) );
-
 	glm::vec3 vTest;
 
 	vTest = glm::cross( Triangle.Normal, Triangle.B - Triangle.A );

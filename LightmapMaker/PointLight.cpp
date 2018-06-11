@@ -5,7 +5,7 @@
 using namespace std;
 
 #include "PointLight.h"
-#include <iostream>
+
 //-------------------------------------------------------------------------//
 
 PointLight::PointLight() :
@@ -63,6 +63,7 @@ PointLight::PointLight( TiXmlElement& ElementEntity ) :
 				case 3: Color.w = ( float ) atof( TempString.c_str() ); break;
 				}
 
+				TempString.clear();
 				IdComp++;
 			}
 		}

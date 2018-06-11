@@ -65,6 +65,7 @@ bool Level::LoadLevel( const string& Route )
 		Brush = Solid->FirstChildElement( "Brush" );
 
 		glm::vec3 TempVector3;
+		Plane* TempPlane = NULL;
 		vector<glm::vec3> Vertexs;
 
 		while ( Brush )
@@ -87,8 +88,18 @@ bool Level::LoadLevel( const string& Route )
 				Vertex = Vertex->NextSiblingElement();
 			}
 
-			for ( size_t i = 0, Id = 0; i < IdVertex.size() / 3; i++, Id += 3 )
-				Triangles.push_back( Triangle( Vertexs[ IdVertex[ Id ] ], Vertexs[ IdVertex[ Id + 1 ] ], Vertexs[ IdVertex[ Id + 2 ] ] ) );
+			for ( size_t i = 0, Id = 0, IdTriangleOnPlane = 0; i < IdVertex.size() / 3; i++, IdTriangleOnPlane++, Id += 3 )
+			{
+				if ( IdTriangleOnPlane == 2 ) IdTriangleOnPlane = 0;
+
+				if ( IdTriangleOnPlane == 0 )
+				{
+					Planes.push_back( Plane() );
+					TempPlane = &Planes[ Planes.size() - 1 ];
+				}
+
+				TempPlane->Triangles[ IdTriangleOnPlane ] = Triangle( Vertexs[ IdVertex[ Id ] ], Vertexs[ IdVertex[ Id + 1 ] ], Vertexs[ IdVertex[ Id + 2 ] ] );	
+			}
 
 			Vertexs.clear();
 			Brush = Brush->NextSiblingElement();
@@ -130,7 +141,7 @@ bool Level::LoadLevel( const string& Route )
 		Entity = Entity->NextSiblingElement();
 	}
 
-	PRINT_LOG( " - Total Triangles: " << Triangles.size() );
+	PRINT_LOG( " - Total Planes: " << Planes.size() );
 	PRINT_LOG( " - Total Point Lights: " << PointLights.size() );
 	PRINT_LOG( "- Level Loaded" );
 	return true;
@@ -138,9 +149,9 @@ bool Level::LoadLevel( const string& Route )
 
 //-------------------------------------------------------------------------//
 
-vector<Triangle>& Level::GetTriangles()
+vector<Plane>& Level::GetPlanes()
 {
-	return Triangles;
+	return Planes;
 }
 
 //-------------------------------------------------------------------------//

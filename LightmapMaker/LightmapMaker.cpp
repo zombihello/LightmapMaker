@@ -8,7 +8,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////
 
-#define LIGHTMAPMAKER "LightmapMaker 1.0.2"
+#define LIGHTMAPMAKER "LightmapMaker 1.0.3"
 
 ///////////////////////////
 // СИСТЕМНЫЕ БИБЛИОТЕКИ
@@ -45,7 +45,7 @@ void InitRoutes( const string& RouteMap )
 	TempId = NameMap.find_last_of( '\\' );
 
 	if ( TempId != -1 )
-		NameMap.erase( 0, TempId+1 );
+		NameMap.erase( 0, TempId + 1 );
 
 	TempId = NameMap.find_last_of( '.' );
 
@@ -56,10 +56,10 @@ void InitRoutes( const string& RouteMap )
 	TempId = DirectoryForLightmaps.find_last_of( '\\' );
 
 	if ( TempId != -1 )
-		DirectoryForLightmaps.erase( TempId+1, DirectoryForLightmaps.size() );
+		DirectoryForLightmaps.erase( TempId + 1, DirectoryForLightmaps.size() );
 	else
 		DirectoryForLightmaps = "";
-	
+
 	wstringstream wStringStream;
 	wStringStream << wstring( DirectoryForLightmaps.begin(), DirectoryForLightmaps.end() );
 	wStringStream << "lm-";
@@ -79,8 +79,10 @@ int main( int argc, char** argv )
 	{
 		InitRoutes( argv[ 1 ] );
 
-		if ( argc > 3 && strstr( argv[ 3 ], "-shadow" ) )
-			Lightmap::EnableShadows( true );
+		if ( argc > 3 && strstr( argv[ 3 ], "-ds" ) )
+			Lightmap::EnableShadows( false );
+
+		Lightmap::MaxSizeLightmap = ( float ) atof( argv[ 2 ] );
 
 		PRINT_LOG( "  - Route to map: " << argv[ 1 ] );
 		PRINT_LOG( "  - Size Lightmap: " << argv[ 2 ] );
@@ -96,20 +98,20 @@ int main( int argc, char** argv )
 		}
 
 		PRINT_LOG( "" );
-		Lightmap::Generate( atoi( argv[ 2 ] ), Level.GetTriangles(), Level.GetPointLights() );
+		Lightmap::Generate( Level.GetPlanes(), Level.GetPointLights() );
 	}
 	else
 	{
 		cout << "Must Be Run With Parameter: \n";
-		cout << "lm.exe [File.lmap] [Size Lightmaps] [-shadow]\n";
-		cout << " -shadow: Enable Shadows In Lightmaps\n";
+		cout << "lm.exe [File.lmap] [Size Lightmaps] [-ds]\n";
+		cout << " -ds: Disable Shadows In Lightmaps\n";
 		system( "pause" );
 		return 0;
 	}
 
 	Logger::SaveInFile( "Build.log" );
 	system( "pause" );
-    return 0;
+	return 0;
 }
 
 //-------------------------------------------------------------------------//

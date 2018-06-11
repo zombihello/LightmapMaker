@@ -32,11 +32,10 @@ public:
 
 	bool operator!=( Triangle& Triangle );
 
-	Image		LightMap;
-
 	glm::vec3	A;
 	glm::vec3	B;
 	glm::vec3	C;
+	glm::vec2	SizeLightmap;
 	glm::vec3	Normal;
 	glm::vec3	UVVector;
 	glm::vec3	Edge1;

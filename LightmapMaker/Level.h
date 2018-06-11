@@ -26,7 +26,7 @@ using namespace std;
 // LIGHTMAPMAKER
 ///////////////////////////
 #include "Logger.h"
-#include "Triangle.h"
+#include "Plane.h"
 #include "PointLight.h"
 
 class Level
@@ -35,13 +35,14 @@ public:
 	/* Загрузить уровень */
 	bool LoadLevel( const string& Route );
 
-	/* Получить все тругольники на уровне */
-	vector<Triangle>& GetTriangles();
+	/* Получить все плоскости на уровне */
+	vector<Plane>& GetPlanes();
 
 	/* Получить все точечные источники света на уровне */
 	vector<PointLight>& GetPointLights();
+
 private:
-	vector<Triangle>		Triangles;
+	vector<Plane>			Planes;
 	vector<PointLight>		PointLights;
 };
 

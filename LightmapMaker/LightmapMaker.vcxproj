@@ -164,6 +164,7 @@
     <ClCompile Include="Lightmap.cpp" />
     <ClCompile Include="LightmapMaker.cpp" />
     <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="Plane.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Triangle.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="Level.h" />
     <ClInclude Include="Lightmap.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="Plane.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Triangle.h" />

@@ -1,4 +1,5 @@
-﻿#include "Triangle.h"
+﻿#include "Lightmap.h"
+#include "Triangle.h"
 
 //-------------------------------------------------------------------------//
 
@@ -77,6 +78,22 @@ Triangle::Triangle( const glm::vec3 & Vertex_A, const glm::vec3 & Vertex_B, cons
 		if ( UV[ i ].y > UVMax.y )
 			UVMax.y = UV[ i ].y;
 	}
+
+	glm::vec2 UVDelta = abs( UVMax - UVMin );
+
+	SizeLightmap = UVDelta * 8.f;
+
+	if ( SizeLightmap.x < 4 )
+		SizeLightmap.x = 4;
+
+	if ( SizeLightmap.y < 4 )
+		SizeLightmap.y = 4;
+
+	if ( SizeLightmap.x > Lightmap::MaxSizeLightmap )
+		SizeLightmap.x = Lightmap::MaxSizeLightmap;
+
+	if ( SizeLightmap.y > Lightmap::MaxSizeLightmap )
+		SizeLightmap.y = Lightmap::MaxSizeLightmap;
 
 	switch ( Flag )
 	{
