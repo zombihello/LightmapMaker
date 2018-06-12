@@ -77,3 +77,13 @@ PointLight::PointLight( TiXmlElement& ElementEntity ) :
 }
 
 //-------------------------------------------------------------------------//
+
+float PointLight::CalculateAttenuation( float Distance )
+{
+	float LinearCoeff = ( 2.0f * Distance ) / Radius;
+	float QuadCoeff = Distance * Distance / ( Radius * Radius );
+
+	return 1.0f / ( 1.0f + LinearCoeff + QuadCoeff );
+}
+
+//-------------------------------------------------------------------------//

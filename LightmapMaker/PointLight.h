@@ -30,6 +30,9 @@ public:
 	/* Конструктор */
 	PointLight( TiXmlElement& ElementEntity );
 
+	/* Вычислить затухание света */
+	float CalculateAttenuation( float Distance );
+
 	float			Intensivity;
 	float			Radius;
 

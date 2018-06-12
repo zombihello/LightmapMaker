@@ -102,10 +102,9 @@ void Lightmap::Calculate( mutex& Mutex, int IdStartPlane, vector<Plane*>& Planes
 
 					Distance = glm::length( Ray.Direction );
 					DiffuseFactor = glm::max( glm::dot( Triangle->Normal, Ray.Normalize_Direction ), 0.0f );
-					Attenuation = glm::max( 1.0f - pow( Distance / PointLight->Radius, 2 ), 0.f );
+					Attenuation = PointLight->CalculateAttenuation( Distance );
 
-					if ( DiffuseFactor != 0 )
-						Color += PointLight->Color * Attenuation;
+					Color += PointLight->Color * Attenuation * DiffuseFactor * PointLight->Intensivity;
 				}
 
 				MaxValue = glm::max( Color.x, glm::max( Color.y, Color.z ) );

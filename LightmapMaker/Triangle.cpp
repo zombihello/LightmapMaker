@@ -95,6 +95,8 @@ Triangle::Triangle( const glm::vec3 & Vertex_A, const glm::vec3 & Vertex_B, cons
 	if ( SizeLightmap.y > Lightmap::MaxSizeLightmap )
 		SizeLightmap.y = Lightmap::MaxSizeLightmap;
 
+	SizeLightmap += 2;
+
 	switch ( Flag )
 	{
 	case 1: //YZ Plane
