@@ -159,6 +159,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ArgumentsStart.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Lightmap.cpp" />
@@ -171,6 +172,7 @@
     <ClCompile Include="Utils\stb\stb_vorbis.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArgumentsStart.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Lightmap.h" />

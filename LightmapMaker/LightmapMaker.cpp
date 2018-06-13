@@ -21,6 +21,7 @@ using namespace std;
 // LIGHTMAPMAKER
 ///////////////////////////
 #include "Logger.h"
+#include "ArgumentsStart.h"
 #include "Level.h"
 #include "Lightmap.h"
 
@@ -71,46 +72,78 @@ void InitRoutes( const string& RouteMap )
 
 //-------------------------------------------------------------------------//
 
+void ShowHelp()
+{
+	cout << endl << LIGHTMAPMAKER << endl << endl;
+	cout << "This Tool Generate Lightmaps For lifeEngine\n";
+	cout << "Author: Egor Pogulyaka (vk.com/zombihello)\n";
+	cout << "She Is Must Be Run With Parameters:\n";
+	cout << "lm.exe [File.lmap] <Other Options>\n\n";
+	cout << "--- Options ---\n\n";
+	cout << "\t -map # \t : Route To Map *.lmap\n";
+	cout << "\t -size # \t : Max Size Lightmap\n";
+	cout << "\t -noshadow \t : Disable Shadows In Lightmaps\n";
+	cout << "\t -savelog \t : Save Log In File\n";
+	cout << "\t -threads # \t : Number Of Threads To Run\n";
+	cout << "\t -help \t\t : Show Help\n";
+}
+
+//-------------------------------------------------------------------------//
+
 int main( int argc, char** argv )
 {
-	PRINT_LOG( LIGHTMAPMAKER );
+	if ( argc > 1 )
+	{	
+		Level			Level;
+		Lightmap		Lightmap;
 
-	if ( argc > 2 )
-	{
-		InitRoutes( argv[ 1 ] );
+		for ( int i = 1; i < argc; i++ )
+		{
+			if ( strstr( argv[ i ], "-size" ) && i + 1 < argc )
+			{
+				ArgumentsStart::MaxSizeLightmap = ( int ) atof( argv[ i + 1 ] );
+				i++;
+			}
+			else if ( strstr( argv[ i ], "-map" ) && i + 1 < argc )
+			{
+				ArgumentsStart::RouteToMap = argv[ i + 1 ];
+				i++;
+			}
+			else if ( strstr( argv[ i ], "-threads" ) && i + 1 < argc )
+			{
+				ArgumentsStart::NumberThreads = ( int ) atof( argv[ i + 1 ] );
+				i++;
+			}
+			else if ( strstr( argv[ i ], "-help" ) )
+			{
+				ShowHelp();
+				return 0;
+			}
 
-		if ( argc > 3 && strstr( argv[ 3 ], "-ds" ) )
-			Lightmap::EnableShadows( false );
+			else if ( strstr( argv[ i ], "-noshadow" ) )	ArgumentsStart::IsDisableShadow = true;
+			else if ( strstr( argv[ i ], "-savelog" ) )		ArgumentsStart::IsSaveLog = true;
+		}
 
-		Lightmap::MaxSizeLightmap = ( float ) atof( argv[ 2 ] );
-
-		PRINT_LOG( "  - Route to map: " << argv[ 1 ] );
-		PRINT_LOG( "  - Size Lightmap: " << argv[ 2 ] );
+		PRINT_LOG( LIGHTMAPMAKER );
+		PRINT_LOG( "  - Route to map: " << ArgumentsStart::RouteToMap );
+		PRINT_LOG( "  - Size Lightmap: " << ArgumentsStart::MaxSizeLightmap );
 		PRINT_LOG( "" );
 
-		Level Level;
-
-		if ( !Level.LoadLevel( argv[ 1 ] ) )
+		if ( !Level.LoadLevel( ArgumentsStart::RouteToMap ) )
 		{
-			Logger::SaveInFile( "Build.log" );
-			system( "pause" );
+			if ( ArgumentsStart::IsSaveLog ) Logger::SaveInFile( "Build.log" );
 			return -1;
 		}
 
+		InitRoutes( ArgumentsStart::RouteToMap );
+
 		PRINT_LOG( "" );
-		Lightmap::Generate( Level.GetPlanes(), Level.GetPointLights() );
+		Lightmap.Generate( Level.GetPlanes(), Level.GetPointLights() );
 	}
 	else
-	{
-		cout << "Must Be Run With Parameter: \n";
-		cout << "lm.exe [File.lmap] [Size Lightmaps] [-ds]\n";
-		cout << " -ds: Disable Shadows In Lightmaps\n";
-		system( "pause" );
-		return 0;
-	}
+		ShowHelp();
 
-	Logger::SaveInFile( "Build.log" );
-	system( "pause" );
+	if ( ArgumentsStart::IsSaveLog ) Logger::SaveInFile( "Build.log" );
 	return 0;
 }
 

@@ -11,8 +11,6 @@
 #ifndef LIGHTMAP_H
 #define LIGHTMAP_H
 
-#define NUM_THREADS thread::hardware_concurrency()
-
 ///////////////////////////
 // —»—“≈ћЌџ≈ Ѕ»ЅЋ»ќ“≈ »
 ///////////////////////////
@@ -34,23 +32,17 @@ class Lightmap
 {
 public:
 	/* Сгенерировать карту освещения */
-	static void Generate( vector<Plane>& Planes, vector<PointLight>& PointLights );
+	void Generate( vector<Plane>& Planes, vector<PointLight>& PointLights );
 	
-	/* Включить тени */
-	static void EnableShadows( bool Enable );
-
 	/* Задать директорию в которую будут сохраняться освещение */
 	static void SetDirectoryForLightmaps( const string& Directory );
 
-	static int MaxSizeLightmap;
-
 private:
 	/* Просчитать карту освещения */
-	static void Calculate( mutex& Mutex, int IdStartTriangle, vector<Plane*>& Planes, vector<Plane>& Geometry, vector<PointLight>& PointLights );
+	void Calculate( mutex& Mutex, int IdStartTriangle, vector<Plane*>& Planes, vector<Plane>& Geometry, vector<PointLight>& PointLights );
 
-	static bool IsEnableShadows;
-	static int CountCalculateLightMaps;	
-	static string DirectoryLightmaps;
+	int					CountCalculateLightMaps;	
+	static string		DirectoryLightmaps;
 };
 
 //-------------------------------------------------------------------------//

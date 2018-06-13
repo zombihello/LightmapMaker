@@ -1,5 +1,6 @@
-﻿#include "Lightmap.h"
-#include "Triangle.h"
+﻿#include "Triangle.h"
+#include "Lightmap.h"
+#include "ArgumentsStart.h"
 
 //-------------------------------------------------------------------------//
 
@@ -15,7 +16,7 @@ Triangle::Triangle( const glm::vec3 & Vertex_A, const glm::vec3 & Vertex_B, cons
 {
 	int Flag = 0;
 	float Distance, X, Y, Z;
-	glm::vec2 UV[3];
+	glm::vec2 UV[ 3 ];
 	glm::vec3 Vect1, Vect2;
 
 	Normal = glm::normalize( glm::cross( B - A, C - A ) );
@@ -89,13 +90,13 @@ Triangle::Triangle( const glm::vec3 & Vertex_A, const glm::vec3 & Vertex_B, cons
 	if ( SizeLightmap.y < 4 )
 		SizeLightmap.y = 4;
 
-	if ( SizeLightmap.x > Lightmap::MaxSizeLightmap )
-		SizeLightmap.x = Lightmap::MaxSizeLightmap;
+	if ( SizeLightmap.x > ArgumentsStart::MaxSizeLightmap )
+		SizeLightmap.x = ( float ) ArgumentsStart::MaxSizeLightmap;
 
-	if ( SizeLightmap.y > Lightmap::MaxSizeLightmap )
-		SizeLightmap.y = Lightmap::MaxSizeLightmap;
+	if ( SizeLightmap.y > ArgumentsStart::MaxSizeLightmap )
+		SizeLightmap.y = ( float ) ArgumentsStart::MaxSizeLightmap;
 
-	SizeLightmap += 2;
+	SizeLightmap += 1;
 
 	switch ( Flag )
 	{
@@ -159,7 +160,7 @@ Triangle::Triangle( const glm::vec3 & Vertex_A, const glm::vec3 & Vertex_B, cons
 
 bool Triangle::operator!=( Triangle& Triangle )
 {
-	return 
+	return
 		A != Triangle.A &&
 		B != Triangle.B &&
 		C != Triangle.C;

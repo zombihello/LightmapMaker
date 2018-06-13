@@ -8,6 +8,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LocalDebuggerWorkingDirectory>..\Bin</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>test.lmap 16</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-size 16 -map test.lmap</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>
