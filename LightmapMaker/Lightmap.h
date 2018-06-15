@@ -32,14 +32,14 @@ class Lightmap
 {
 public:
 	/* Сгенерировать карту освещения */
-	void Generate( vector<Plane>& Planes, vector<PointLight>& PointLights );
+	void Generate( glm::vec4& AmbienceColor, vector<Plane>& Planes, vector<PointLight>& PointLights, vector<SpotLight>& SpotLights, vector<DirectionalLight>& DirectionalLights );
 	
 	/* Задать директорию в которую будут сохраняться освещение */
 	static void SetDirectoryForLightmaps( const string& Directory );
 
 private:
 	/* Просчитать карту освещения */
-	void Calculate( mutex& Mutex, int IdStartTriangle, vector<Plane*>& Planes, vector<Plane>& Geometry, vector<PointLight>& PointLights );
+	void Calculate( mutex& Mutex, int IdStartTriangle, glm::vec4& AmbienceColor, vector<Plane*>& Planes, vector<Plane>& Geometry, vector<PointLight>& PointLights, vector<SpotLight>& SpotLights, vector<DirectionalLight>& DirectionalLights );
 
 	int					CountCalculateLightMaps;	
 	static string		DirectoryLightmaps;

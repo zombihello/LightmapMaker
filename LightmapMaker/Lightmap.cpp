@@ -7,7 +7,7 @@ string Lightmap::DirectoryLightmaps = "";
 
 //-------------------------------------------------------------------------//
 
-void Lightmap::Generate( vector<Plane>& Planes, vector<PointLight>& PointLights )
+void Lightmap::Generate( glm::vec4& AmbienceColor, vector<Plane>& Planes, vector<PointLight>& PointLights, vector<SpotLight>& SpotLights, vector<DirectionalLight>& DirectionalLights )
 {
 	CountCalculateLightMaps = 0;
 	int CountPlanesForThread = ( int ) ceil( ( float ) Planes.size() / ArgumentsStart::NumberThreads );
@@ -29,7 +29,7 @@ void Lightmap::Generate( vector<Plane>& Planes, vector<PointLight>& PointLights 
 
 	// Создаем потоки для просчета освещения
 	for ( int i = 0; i < ArgumentsStart::NumberThreads; i++ )
-		Threads.push_back( thread( &Lightmap::Calculate, this, ref( Mutex ), i*CountPlanesForThread, ref( PlanesForThreads[ i ] ), ref( Planes ), ref( PointLights ) ) );
+		Threads.push_back( thread( &Lightmap::Calculate, this, ref( Mutex ), i*CountPlanesForThread, ref( AmbienceColor ), ref( PlanesForThreads[ i ] ), ref( Planes ), ref( PointLights ), ref( SpotLights ), ref( DirectionalLights ) ) );
 
 	// Ждем завершения всех потоков
 	for ( int i = 0; i < ArgumentsStart::NumberThreads; i++ )
@@ -47,9 +47,9 @@ void Lightmap::SetDirectoryForLightmaps( const string& Directory )
 
 //-------------------------------------------------------------------------//
 
-void Lightmap::Calculate( mutex& Mutex, int IdStartPlane, vector<Plane*>& Planes, vector<Plane>& Geometry, vector<PointLight>& PointLights )
+void Lightmap::Calculate( mutex& Mutex, int IdStartPlane, glm::vec4& AmbienceColor, vector<Plane*>& Planes, vector<Plane>& Geometry, vector<PointLight>& PointLights, vector<SpotLight>& SpotLights, vector<DirectionalLight>& DirectionalLights )
 {
-	float Distance = 0, DiffuseFactor = 0, Attenuation = 0, MaxValue = 0;
+	float Distance = 0, DiffuseFactor = 0, SpotFactor = 0, Attenuation = 0, MaxValue = 0;
 	glm::vec2 UVFactor;
 	glm::vec3 Newedge1, Newedge2, PositionFragment;
 	Ray Ray;
@@ -75,11 +75,16 @@ void Lightmap::Calculate( mutex& Mutex, int IdStartPlane, vector<Plane*>& Planes
 				PositionFragment = Triangle->UVVector + Newedge2 + Newedge1;
 				glm::vec4 Color;
 
+				// *********
+				// Просчитываем точечное освещение
+				// *********
+
+				// TODO: [zombiHello] - Оптимизировать трассировку лучей
 				for ( size_t IdPointLights = 0; IdPointLights < PointLights.size(); IdPointLights++ )
 				{
 					PointLight* PointLight = &PointLights[ IdPointLights ];
 					Ray.SetRay( PointLight->Position, PositionFragment );
-					
+
 					if ( !ArgumentsStart::IsDisableShadow )
 					{
 						bool IsIntersect = false;
@@ -94,7 +99,58 @@ void Lightmap::Calculate( mutex& Mutex, int IdStartPlane, vector<Plane*>& Planes
 					DiffuseFactor = glm::max( glm::dot( Triangle->Normal, Ray.Normalize_Direction ), 0.0f );
 					Attenuation = PointLight->CalculateAttenuation( Distance );
 
-					Color += PointLight->Color * Attenuation * DiffuseFactor * PointLight->Intensivity;
+					Color += ( PointLight->Color + AmbienceColor ) * Attenuation * DiffuseFactor * PointLight->Intensivity;
+				}
+
+				// *********
+				// Просчитываем прожекторное освещение
+				// *********
+
+				for ( size_t IdSpotLights = 0; IdSpotLights < SpotLights.size(); IdSpotLights++ )
+				{
+					SpotLight* SpotLight = &SpotLights[ IdSpotLights ];
+					Ray.SetRay( SpotLight->Position, PositionFragment );
+
+					if ( !ArgumentsStart::IsDisableShadow )
+					{
+						bool IsIntersect = false;
+						for ( size_t IdPlane = 0; IdPlane < Geometry.size() && !IsIntersect; IdPlane++ )
+							if ( Geometry[ IdPlane ] != *Triangle )
+								IsIntersect = Ray.IntersectTriangle( Geometry[ IdPlane ].Triangles[ 0 ] ) || Ray.IntersectTriangle( Geometry[ IdPlane ].Triangles[ 1 ] );
+
+						if ( IsIntersect ) continue;
+					}
+
+					Distance = glm::length( Ray.Direction );
+					DiffuseFactor = glm::max( glm::dot( Triangle->Normal, Ray.Normalize_Direction ), 0.0f );
+					SpotFactor = glm::dot( SpotLight->SpotDirection, -Ray.Normalize_Direction );
+					SpotFactor = glm::clamp( ( SpotFactor - SpotLight->SpotCutoff ) / ( 1.0f - SpotLight->SpotCutoff ), 0.0f, 1.0f );
+					Attenuation = SpotLight->CalculateAttenuation( Distance );
+
+					Color += ( SpotLight->Color + AmbienceColor ) * Attenuation * DiffuseFactor * SpotFactor * SpotLight->Intensivity;
+				}
+
+				// *********
+				// Просчитываем направленое освещение
+				// *********
+
+				for ( size_t IdDirectionalLights = 0; IdDirectionalLights < DirectionalLights.size(); IdDirectionalLights++ )
+				{
+					DirectionalLight* DirectionalLight = &DirectionalLights[ IdDirectionalLights ];
+					Ray.SetRay( DirectionalLight->Position + PositionFragment, PositionFragment );
+
+					if ( !ArgumentsStart::IsDisableShadow )
+					{
+						bool IsIntersect = false;
+						for ( size_t IdPlane = 0; IdPlane < Geometry.size() && !IsIntersect; IdPlane++ )
+							if ( Geometry[ IdPlane ] != *Triangle )
+								IsIntersect = Ray.IntersectTriangle( Geometry[ IdPlane ].Triangles[ 0 ] ) || Ray.IntersectTriangle( Geometry[ IdPlane ].Triangles[ 1 ] );
+
+						if ( IsIntersect ) continue;
+					}
+
+					DiffuseFactor = glm::max( glm::dot( glm::normalize( DirectionalLight->Position ), Triangle->Normal ), 0.0f );
+					Color += ( DirectionalLight->Color + AmbienceColor ) * DirectionalLight->Intensivity * DiffuseFactor;
 				}
 
 				MaxValue = glm::max( Color.x, glm::max( Color.y, Color.z ) );

@@ -20,6 +20,7 @@ using namespace std;
 ///////////////////////////
 // LIGHTMAPMAKER
 ///////////////////////////
+#include "BuildNumber.h"
 #include "Logger.h"
 #include "ArgumentsStart.h"
 #include "Level.h"
@@ -74,11 +75,11 @@ void InitRoutes( const string& RouteMap )
 
 void ShowHelp()
 {
-	cout << endl << LIGHTMAPMAKER << endl << endl;
+	cout << endl << LIGHTMAPMAKER << " (Build " << BUILD_NUMBER ")" << endl << endl;
 	cout << "This Tool Generate Lightmaps For lifeEngine\n";
 	cout << "Author: Egor Pogulyaka (vk.com/zombihello)\n";
 	cout << "She Is Must Be Run With Parameters:\n";
-	cout << "lm.exe [File.lmap] <Other Options>\n\n";
+	cout << "lm.exe -map [File.lmap] <Other Options>\n\n";
 	cout << "--- Options ---\n\n";
 	cout << "\t -map # \t : Route To Map *.lmap\n";
 	cout << "\t -size # \t : Max Size Lightmap\n";
@@ -124,7 +125,7 @@ int main( int argc, char** argv )
 			else if ( strstr( argv[ i ], "-savelog" ) )		ArgumentsStart::IsSaveLog = true;
 		}
 
-		PRINT_LOG( LIGHTMAPMAKER );
+		PRINT_LOG( LIGHTMAPMAKER << " (Build " << BUILD_NUMBER ")" );
 		PRINT_LOG( "  - Route to map: " << ArgumentsStart::RouteToMap );
 		PRINT_LOG( "  - Size Lightmap: " << ArgumentsStart::MaxSizeLightmap );
 		PRINT_LOG( "" );
@@ -138,7 +139,7 @@ int main( int argc, char** argv )
 		InitRoutes( ArgumentsStart::RouteToMap );
 
 		PRINT_LOG( "" );
-		Lightmap.Generate( Level.GetPlanes(), Level.GetPointLights() );
+		Lightmap.Generate( Level.GetAmbienceColor(), Level.GetPlanes(), Level.GetPointLights(), Level.GetSpotLights(), Level.GetDirectionalLights() );
 	}
 	else
 		ShowHelp();

@@ -23,6 +23,43 @@ bool Level::LoadLevel( const string& Route )
 	}
 
 	// ****************************
+	// Загружаем настройки карты
+	// ****************************
+
+	TiXmlElement* Settings;
+	Settings = Map->FirstChildElement( "Settings" );
+
+	if ( Settings != NULL )
+	{
+		TiXmlElement *AmbienceColor;
+		AmbienceColor = Settings->FirstChildElement( "AmbienceColor" );
+
+		if ( AmbienceColor != NULL )
+			if ( AmbienceColor->Attribute( "Value" ) != NULL )
+			{
+				int IdComp = 0;
+				stringstream StringStream( AmbienceColor->Attribute( "Value" ) );
+				string TempString;
+
+				while ( !StringStream.eof() )
+				{
+					StringStream >> TempString;
+
+					switch ( IdComp )
+					{
+					case 0: this->AmbienceColor.x = ( float ) atof( TempString.c_str() ); break;
+					case 1: this->AmbienceColor.y = ( float ) atof( TempString.c_str() ); break;
+					case 2: this->AmbienceColor.z = ( float ) atof( TempString.c_str() ); break;
+					case 3: this->AmbienceColor.w = ( float ) atof( TempString.c_str() ); break;
+					}
+
+					TempString.clear();
+					IdComp++;
+				}
+			}
+	}
+
+	// ****************************
 	// Загружаем твердые браши
 	// ****************************
 
@@ -98,7 +135,7 @@ bool Level::LoadLevel( const string& Route )
 					TempPlane = &Planes[ Planes.size() - 1 ];
 				}
 
-				TempPlane->Triangles[ IdTriangleOnPlane ] = Triangle( Vertexs[ IdVertex[ Id ] ], Vertexs[ IdVertex[ Id + 1 ] ], Vertexs[ IdVertex[ Id + 2 ] ] );	
+				TempPlane->Triangles[ IdTriangleOnPlane ] = Triangle( Vertexs[ IdVertex[ Id ] ], Vertexs[ IdVertex[ Id + 1 ] ], Vertexs[ IdVertex[ Id + 2 ] ] );
 			}
 
 			Vertexs.clear();
@@ -137,14 +174,50 @@ bool Level::LoadLevel( const string& Route )
 			PRINT_LOG( "   Position: " << PointLight.Position.x << ", " << PointLight.Position.y << ", " << PointLight.Position.z );
 			PRINT_LOG( "	****\n" );
 		}
+		else if ( NameEntity == "SpotLight" )
+		{
+			SpotLight SpotLight( *Entity );
+			SpotLights.push_back( SpotLight );
+
+			PRINT_LOG( " - Add Spot Light" );
+			PRINT_LOG( "   Intensivity: " << SpotLight.Intensivity );
+			PRINT_LOG( "   Radius: " << SpotLight.Radius );
+			PRINT_LOG( "   Height: " << SpotLight.Height );
+			PRINT_LOG( "   Spot Cutoff: " << SpotLight.SpotCutoff );
+			PRINT_LOG( "   Position: " << SpotLight.Position.x << ", " << SpotLight.Position.y << ", " << SpotLight.Position.z );
+			PRINT_LOG( "   Spot Direction: " << SpotLight.SpotDirection.x << ", " << SpotLight.SpotDirection.y << ", " << SpotLight.SpotDirection.z );
+			PRINT_LOG( "   Rotation: " << SpotLight.Rotation.x << ", " << SpotLight.Rotation.y << ", " << SpotLight.Rotation.z );
+			PRINT_LOG( "   Color: " << SpotLight.Color.x << ", " << SpotLight.Color.y << ", " << SpotLight.Color.z << ", " << SpotLight.Color.w );			
+			PRINT_LOG( "	****\n" );
+		}
+		else if ( NameEntity == "lightDirectional" )
+		{
+			DirectionalLight DirectionalLight( *Entity );
+			DirectionalLights.push_back( DirectionalLight );
+
+			PRINT_LOG( " - Add Directional Light" );
+			PRINT_LOG( "   Intensivity: " << DirectionalLight.Intensivity );
+			PRINT_LOG( "   Color: " << DirectionalLight.Color.x << ", " << DirectionalLight.Color.y << ", " << DirectionalLight.Color.z << ", " << DirectionalLight.Color.w );
+			PRINT_LOG( "   Direction: " << DirectionalLight.Position.x << ", " << DirectionalLight.Position.y << ", " << DirectionalLight.Position.z );
+			PRINT_LOG( "	****\n" );
+		}
 
 		Entity = Entity->NextSiblingElement();
 	}
 
 	PRINT_LOG( " - Total Planes: " << Planes.size() );
 	PRINT_LOG( " - Total Point Lights: " << PointLights.size() );
+	PRINT_LOG( " - Total Spot Lights: " << SpotLights.size() );
+	PRINT_LOG( " - Total Directional Lights: " << DirectionalLights.size() );
 	PRINT_LOG( "- Level Loaded" );
 	return true;
+}
+
+//-------------------------------------------------------------------------//
+
+glm::vec4& Level::GetAmbienceColor()
+{
+	return AmbienceColor;
 }
 
 //-------------------------------------------------------------------------//
@@ -159,6 +232,20 @@ vector<Plane>& Level::GetPlanes()
 vector<PointLight>& Level::GetPointLights()
 {
 	return PointLights;
+}
+
+//-------------------------------------------------------------------------//
+
+vector<SpotLight>& Level::GetSpotLights()
+{
+	return SpotLights;
+}
+
+//-------------------------------------------------------------------------//
+
+vector<DirectionalLight>& Level::GetDirectionalLights()
+{
+	return DirectionalLights;
 }
 
 //-------------------------------------------------------------------------//

@@ -80,8 +80,13 @@ Triangle::Triangle( const glm::vec3 & Vertex_A, const glm::vec3 & Vertex_B, cons
 			UVMax.y = UV[ i ].y;
 	}
 
-	glm::vec2 UVDelta = abs( UVMax - UVMin );
+	
 
+	// *************
+	// Задаем границы размера карты освещения
+	// *************
+
+	glm::vec2 UVDelta = abs( UVMax - UVMin );
 	SizeLightmap = UVDelta * 8.f;
 
 	if ( SizeLightmap.x < 4 )
@@ -95,8 +100,6 @@ Triangle::Triangle( const glm::vec3 & Vertex_A, const glm::vec3 & Vertex_B, cons
 
 	if ( SizeLightmap.y > ArgumentsStart::MaxSizeLightmap )
 		SizeLightmap.y = ( float ) ArgumentsStart::MaxSizeLightmap;
-
-	SizeLightmap += 1;
 
 	switch ( Flag )
 	{

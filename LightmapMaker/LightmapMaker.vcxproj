@@ -104,6 +104,9 @@
       <AdditionalLibraryDirectories>.\Utils\OpenGL\glm\lib;.\Utils\XML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>XML-d.lib;glm-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>Utils\bc.exe BuildNumber.h</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -139,6 +142,9 @@
       <AdditionalLibraryDirectories>.\Utils\OpenGL\glm\lib;.\Utils\XML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>XML.lib;glm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>Utils\bc.exe BuildNumber.h</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -160,6 +166,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ArgumentsStart.cpp" />
+    <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Lightmap.cpp" />
@@ -168,11 +175,14 @@
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Ray.cpp" />
+    <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Utils\stb\stb_vorbis.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArgumentsStart.h" />
+    <ClInclude Include="BuildNumber.h" />
+    <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Lightmap.h" />
@@ -180,6 +190,7 @@
     <ClInclude Include="Plane.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Ray.h" />
+    <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Utils\stb\stb.h" />
     <ClInclude Include="Utils\stb\stb_connected_components.h" />
