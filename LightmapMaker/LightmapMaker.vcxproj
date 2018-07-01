@@ -23,7 +23,7 @@
     <ProjectGuid>{9A3C88EA-FFA5-4823-B808-B9B6BDC6C865}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>LightmapMaker</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -94,15 +94,15 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\Utils\stb;.\Utils\XML\include;.\Utils\OpenGL\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\Utils\stb;.\Utils\XML\include;.\Utils\OpenGL\glew\include;.\Utils\OpenGL\glm;.\Utils\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>.\Utils\OpenGL\glm\lib;.\Utils\XML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>XML-d.lib;glm-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\Utils\OpenGL\glew\lib;.\Utils\SFML\lib;.\Utils\OpenGL\glm\lib;.\Utils\XML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>XML-d.lib;glm-d.lib;glew32sd.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>Utils\bc.exe BuildNumber.h</Command>
@@ -130,17 +130,17 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\Utils\stb;.\Utils\XML\include;.\Utils\OpenGL\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\Utils\stb;.\Utils\XML\include;.\Utils\OpenGL\glew\include;.\Utils\OpenGL\glm;.\Utils\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>.\Utils\OpenGL\glm\lib;.\Utils\XML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>XML.lib;glm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\Utils\OpenGL\glew\lib;.\Utils\SFML\lib;.\Utils\OpenGL\glm\lib;.\Utils\XML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>XML.lib;glm.lib;glew32s.lib;sfml-graphics.lib;sfml-system.lib;sfml-window.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>Utils\bc.exe BuildNumber.h</Command>
@@ -165,52 +165,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ArgumentsStart.cpp" />
-    <ClCompile Include="DirectionalLight.cpp" />
-    <ClCompile Include="Image.cpp" />
-    <ClCompile Include="Level.cpp" />
-    <ClCompile Include="Lightmap.cpp" />
     <ClCompile Include="LightmapMaker.cpp" />
-    <ClCompile Include="Logger.cpp" />
-    <ClCompile Include="Plane.cpp" />
-    <ClCompile Include="PointLight.cpp" />
-    <ClCompile Include="Ray.cpp" />
-    <ClCompile Include="SpotLight.cpp" />
-    <ClCompile Include="Triangle.cpp" />
-    <ClCompile Include="Utils\stb\stb_vorbis.c" />
+    <ClCompile Include="OpenGL\OpenGL.cpp" />
+    <ClCompile Include="OpenGL\Shader.cpp" />
+    <ClCompile Include="System\ArgumentsStart.cpp" />
+    <ClCompile Include="System\Directories.cpp" />
+    <ClCompile Include="System\Error.cpp" />
+    <ClCompile Include="System\Logger.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ArgumentsStart.h" />
     <ClInclude Include="BuildNumber.h" />
-    <ClInclude Include="DirectionalLight.h" />
-    <ClInclude Include="Image.h" />
-    <ClInclude Include="Level.h" />
-    <ClInclude Include="Lightmap.h" />
-    <ClInclude Include="Logger.h" />
-    <ClInclude Include="Plane.h" />
-    <ClInclude Include="PointLight.h" />
-    <ClInclude Include="Ray.h" />
-    <ClInclude Include="SpotLight.h" />
-    <ClInclude Include="Triangle.h" />
-    <ClInclude Include="Utils\stb\stb.h" />
-    <ClInclude Include="Utils\stb\stb_connected_components.h" />
-    <ClInclude Include="Utils\stb\stb_c_lexer.h" />
-    <ClInclude Include="Utils\stb\stb_divide.h" />
-    <ClInclude Include="Utils\stb\stb_dxt.h" />
-    <ClInclude Include="Utils\stb\stb_easy_font.h" />
-    <ClInclude Include="Utils\stb\stb_herringbone_wang_tile.h" />
-    <ClInclude Include="Utils\stb\stb_image.h" />
-    <ClInclude Include="Utils\stb\stb_image_resize.h" />
-    <ClInclude Include="Utils\stb\stb_image_write.h" />
-    <ClInclude Include="Utils\stb\stb_leakcheck.h" />
-    <ClInclude Include="Utils\stb\stb_perlin.h" />
-    <ClInclude Include="Utils\stb\stb_rect_pack.h" />
-    <ClInclude Include="Utils\stb\stb_sprintf.h" />
-    <ClInclude Include="Utils\stb\stb_textedit.h" />
-    <ClInclude Include="Utils\stb\stb_tilemap_editor.h" />
-    <ClInclude Include="Utils\stb\stb_truetype.h" />
-    <ClInclude Include="Utils\stb\stb_voxel_render.h" />
-    <ClInclude Include="Utils\stb\stretchy_buffer.h" />
+    <ClInclude Include="OpenGL\OpenGL.h" />
+    <ClInclude Include="OpenGL\Shader.h" />
+    <ClInclude Include="System\ArgumentsStart.h" />
+    <ClInclude Include="System\Directories.h" />
+    <ClInclude Include="System\Error.h" />
+    <ClInclude Include="System\Logger.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

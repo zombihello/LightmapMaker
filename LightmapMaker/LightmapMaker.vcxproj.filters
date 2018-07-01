@@ -1,156 +1,53 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Исходные файлы">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="System">
+      <UniqueIdentifier>{76a7fdf3-c16a-40b8-8841-b8f762da717d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Файлы заголовков">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Файлы ресурсов">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="STB">
-      <UniqueIdentifier>{41568004-7368-47c4-ba80-601fff94ceec}</UniqueIdentifier>
+    <Filter Include="OpenGL">
+      <UniqueIdentifier>{2c9b70f6-88f1-4191-8ad0-c38ef565cde8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="LightmapMaker.cpp">
-      <Filter>Исходные файлы</Filter>
+    <ClCompile Include="LightmapMaker.cpp" />
+    <ClCompile Include="System\ArgumentsStart.cpp">
+      <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="Logger.cpp">
-      <Filter>Исходные файлы</Filter>
+    <ClCompile Include="System\Logger.cpp">
+      <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="Utils\stb\stb_vorbis.c">
-      <Filter>STB</Filter>
+    <ClCompile Include="System\Directories.cpp">
+      <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="Level.cpp">
-      <Filter>Исходные файлы</Filter>
+    <ClCompile Include="OpenGL\OpenGL.cpp">
+      <Filter>OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="Triangle.cpp">
-      <Filter>Исходные файлы</Filter>
+    <ClCompile Include="System\Error.cpp">
+      <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="Image.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="Lightmap.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="PointLight.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="Ray.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="Plane.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="ArgumentsStart.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectionalLight.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="SpotLight.cpp">
-      <Filter>Исходные файлы</Filter>
+    <ClCompile Include="OpenGL\Shader.cpp">
+      <Filter>OpenGL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Logger.h">
-      <Filter>Файлы заголовков</Filter>
+    <ClInclude Include="BuildNumber.h" />
+    <ClInclude Include="System\ArgumentsStart.h">
+      <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\stb\stb_herringbone_wang_tile.h">
-      <Filter>STB</Filter>
+    <ClInclude Include="System\Logger.h">
+      <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\stb\stb_image.h">
-      <Filter>STB</Filter>
+    <ClInclude Include="System\Directories.h">
+      <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\stb\stb_image_resize.h">
-      <Filter>STB</Filter>
+    <ClInclude Include="OpenGL\OpenGL.h">
+      <Filter>OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\stb\stb_image_write.h">
-      <Filter>STB</Filter>
+    <ClInclude Include="System\Error.h">
+      <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\stb\stb_leakcheck.h">
-      <Filter>STB</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\stb\stb_perlin.h">
-      <Filter>STB</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\stb\stb_rect_pack.h">
-      <Filter>STB</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\stb\stb_sprintf.h">
-      <Filter>STB</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\stb\stb_textedit.h">
-      <Filter>STB</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\stb\stb_tilemap_editor.h">
-      <Filter>STB</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\stb\stb_truetype.h">
-      <Filter>STB</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\stb\stb_voxel_render.h">
-      <Filter>STB</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\stb\stretchy_buffer.h">
-      <Filter>STB</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\stb\stb.h">
-      <Filter>STB</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\stb\stb_c_lexer.h">
-      <Filter>STB</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\stb\stb_connected_components.h">
-      <Filter>STB</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\stb\stb_divide.h">
-      <Filter>STB</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\stb\stb_dxt.h">
-      <Filter>STB</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\stb\stb_easy_font.h">
-      <Filter>STB</Filter>
-    </ClInclude>
-    <ClInclude Include="Level.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Triangle.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Image.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Lightmap.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="PointLight.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Ray.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Plane.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="ArgumentsStart.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="BuildNumber.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectionalLight.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="SpotLight.h">
-      <Filter>Файлы заголовков</Filter>
+    <ClInclude Include="OpenGL\Shader.h">
+      <Filter>OpenGL</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

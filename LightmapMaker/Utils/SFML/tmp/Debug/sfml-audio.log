@@ -1,0 +1,49 @@
+﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(367,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(368,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(392,5): warning MSB8028: The intermediate directory (..\..\..\tmp\Debug\) contains files shared from another project (sfml-main.vcxproj, sfml-system.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  ALCheck.cpp
+  AlResource.cpp
+  AudioDevice.cpp
+  Listener.cpp
+  Music.cpp
+  Sound.cpp
+  SoundBuffer.cpp
+  SoundBufferRecorder.cpp
+  InputSoundFile.cpp
+  OutputSoundFile.cpp
+  SoundRecorder.cpp
+  SoundSource.cpp
+  SoundStream.cpp
+  SoundFileFactory.cpp
+  SoundFileReaderFlac.cpp
+SoundFileReaderFlac.cpp(287): warning C4244: аргумент: преобразование "sf::Uint64" в "int", возможна потеря данных
+  SoundFileReaderOgg.cpp
+  SoundFileReaderWav.cpp
+SoundFileReaderWav.cpp(149): warning C4018: <: несоответствие типов со знаком и без знака
+  SoundFileWriterFlac.cpp
+  SoundFileWriterOgg.cpp
+  SoundFileWriterWav.cpp
+  Создание кода...
+     Создается библиотека ../../../lib/sfml-audio-d.lib и объект ../../../lib/sfml-audio-d.exp
+SoundFileWriterWav.obj : warning LNK4099: "vc140.pdb" PDB не найден с "SoundFileWriterWav.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+SoundFileWriterOgg.obj : warning LNK4099: "vc140.pdb" PDB не найден с "SoundFileWriterOgg.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+SoundFileWriterFlac.obj : warning LNK4099: "vc140.pdb" PDB не найден с "SoundFileWriterFlac.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+SoundFileReaderWav.obj : warning LNK4099: "vc140.pdb" PDB не найден с "SoundFileReaderWav.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+SoundFileReaderOgg.obj : warning LNK4099: "vc140.pdb" PDB не найден с "SoundFileReaderOgg.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+SoundFileReaderFlac.obj : warning LNK4099: "vc140.pdb" PDB не найден с "SoundFileReaderFlac.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+SoundFileFactory.obj : warning LNK4099: "vc140.pdb" PDB не найден с "SoundFileFactory.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+SoundStream.obj : warning LNK4099: "vc140.pdb" PDB не найден с "SoundStream.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+SoundSource.obj : warning LNK4099: "vc140.pdb" PDB не найден с "SoundSource.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+SoundRecorder.obj : warning LNK4099: "vc140.pdb" PDB не найден с "SoundRecorder.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+OutputSoundFile.obj : warning LNK4099: "vc140.pdb" PDB не найден с "OutputSoundFile.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+InputSoundFile.obj : warning LNK4099: "vc140.pdb" PDB не найден с "InputSoundFile.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+SoundBufferRecorder.obj : warning LNK4099: "vc140.pdb" PDB не найден с "SoundBufferRecorder.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+SoundBuffer.obj : warning LNK4099: "vc140.pdb" PDB не найден с "SoundBuffer.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+Sound.obj : warning LNK4099: "vc140.pdb" PDB не найден с "Sound.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+Music.obj : warning LNK4099: "vc140.pdb" PDB не найден с "Music.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+Listener.obj : warning LNK4099: "vc140.pdb" PDB не найден с "Listener.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+AudioDevice.obj : warning LNK4099: "vc140.pdb" PDB не найден с "AudioDevice.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+AlResource.obj : warning LNK4099: "vc140.pdb" PDB не найден с "AlResource.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+ALCheck.obj : warning LNK4099: "vc140.pdb" PDB не найден с "ALCheck.obj" или на "E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\bin\vc140.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+  sfml-audio.vcxproj -> E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\src\SFML\Audio\..\..\..\bin\sfml-audio-d-2.dll
+  sfml-audio.vcxproj ->  (Full PDB)

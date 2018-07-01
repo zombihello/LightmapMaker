@@ -1,0 +1,28 @@
+﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(367,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(368,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(392,5): warning MSB8028: The intermediate directory (..\..\..\tmp\Release\) contains files shared from another project (sfml-graphics.vcxproj, sfml-main.vcxproj, sfml-system.vcxproj, sfml-window.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  ALCheck.cpp
+  AlResource.cpp
+  AudioDevice.cpp
+  InputSoundFile.cpp
+  Listener.cpp
+  Music.cpp
+  OutputSoundFile.cpp
+  Sound.cpp
+  SoundBuffer.cpp
+  SoundBufferRecorder.cpp
+  SoundFileFactory.cpp
+  SoundFileReaderFlac.cpp
+SoundFileReaderFlac.cpp(287): warning C4244: аргумент: преобразование "sf::Uint64" в "int", возможна потеря данных
+  SoundFileReaderOgg.cpp
+  SoundFileReaderWav.cpp
+SoundFileReaderWav.cpp(149): warning C4018: <: несоответствие типов со знаком и без знака
+  SoundFileWriterFlac.cpp
+  SoundFileWriterOgg.cpp
+  SoundFileWriterWav.cpp
+  SoundRecorder.cpp
+  SoundSource.cpp
+  SoundStream.cpp
+  Создание кода...
+     Создается библиотека ../../../lib/sfml-audio.lib и объект ../../../lib/sfml-audio.exp
+  sfml-audio.vcxproj -> E:\Egor\projects\C++\GameEngine\lifeEngine\lifeEngine\Utils\SFML\src\SFML\Audio\..\..\..\bin\sfml-audio-2.dll
