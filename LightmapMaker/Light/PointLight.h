@@ -8,30 +8,36 @@
 // 
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef OPENGL_H
-#define OPENGL_H
+#ifndef POINT_LIGHT_H
+#define POINT_LIGHT_H
 
 ///////////////////////////
 // СИСТЕМНЫЕ БИБЛИОТЕКИ
 ///////////////////////////
-#include <glew\glew.h>
 #include <glm\glm.hpp>
-#include <SFML\Graphics.hpp>
+#include <tinyxml.h>
+using namespace std;
 
 ///////////////////////////
 // LIGHTMAPMAKER
 ///////////////////////////
-#include "Shader.h"
-#include "VAO.h"
+#include "LightSphere.h"
 
-//-------------------------------------------------------------------------//
-
-namespace OpenGL_API
+struct PointLight
 {
-	/* ИНИЦИАЛИЗИРОВАТЬ OPENGL */
-	void InitOpenGL( sf::RenderWindow& RenderWindow );
-}
+	/* КОНСТРУКТОР */
+	PointLight();
+	PointLight( const PointLight& Copy );
+	PointLight( TiXmlElement& Element );
 
-//-------------------------------------------------------------------------//
+	PointLight& operator=( const PointLight& Copy );
 
-#endif // !OPENGL_H
+	float				Intensivity;
+	float				Radius;
+
+	glm::vec3			Position;
+	glm::vec4			Color;
+	LightSphere			LightSphere;
+};
+
+#endif // !POINT_LIGHT_H

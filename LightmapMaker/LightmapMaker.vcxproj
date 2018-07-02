@@ -165,19 +165,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Level\Brush.cpp" />
+    <ClCompile Include="Level\BrushVertex.cpp" />
+    <ClCompile Include="Level\Level.cpp" />
+    <ClCompile Include="Level\Plane.cpp" />
     <ClCompile Include="LightmapMaker.cpp" />
+    <ClCompile Include="Light\LightSphere.cpp" />
+    <ClCompile Include="Light\PointLight.cpp" />
     <ClCompile Include="OpenGL\OpenGL.cpp" />
     <ClCompile Include="OpenGL\Shader.cpp" />
+    <ClCompile Include="OpenGL\VAO.cpp" />
     <ClCompile Include="System\ArgumentsStart.cpp" />
+    <ClCompile Include="System\Camera.cpp" />
     <ClCompile Include="System\Directories.cpp" />
     <ClCompile Include="System\Error.cpp" />
     <ClCompile Include="System\Logger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BuildNumber.h" />
+    <ClInclude Include="Level\Brush.h" />
+    <ClInclude Include="Level\BrushVertex.h" />
+    <ClInclude Include="Level\Level.h" />
+    <ClInclude Include="Level\Plane.h" />
+    <ClInclude Include="Light\LightSphere.h" />
+    <ClInclude Include="Light\PointLight.h" />
     <ClInclude Include="OpenGL\OpenGL.h" />
     <ClInclude Include="OpenGL\Shader.h" />
+    <ClInclude Include="OpenGL\VAO.h" />
     <ClInclude Include="System\ArgumentsStart.h" />
+    <ClInclude Include="System\Camera.h" />
     <ClInclude Include="System\Directories.h" />
     <ClInclude Include="System\Error.h" />
     <ClInclude Include="System\Logger.h" />

@@ -3,8 +3,8 @@
 //				*** LightmapMaker ***
 //				  Copyright (C) 2018
 //
-// —в¤зь со мной:		https://vk.com/zombihello
-// –епозиторий движка:  https://github.com/zombihello/LightmapMaker
+// Связь со мной:		https://vk.com/zombihello
+// Репозиторий движка:  https://github.com/zombihello/LightmapMaker
 // 
 //////////////////////////////////////////////////////////////////////////
 
@@ -15,7 +15,7 @@
 #define PRINT_LOG( X ) { Logger::Log << Logger::GetTime() << X << endl; cout << Logger::GetTime() << X << endl; }
 
 ///////////////////////////
-// —»—“≈ћЌџ≈ Ѕ»ЅЋ»ќ“≈ »
+// СИСТЕМНЫЕ БИБЛИОТЕКИ
 ///////////////////////////
 #include <iostream>
 #include <fstream>
@@ -26,13 +26,13 @@ using namespace std;
 class Logger
 {
 public:
-	/* —оздать файл логов */
+	/* СОЗДАТЬ ФАЙЛ ЛОГОВ */
 	static void CreateLogFile();
 
-	/* ”далить файл логов */
+	/* УДАЛИТЬ ФАЙЛ ЛОГОВ */
 	static void DeleteLogFile();
 
-	/* ѕолучить врем¤, чтобы записать в лог */
+	/* ПОЛУЧИТЬ ВРЕМЯ ДЛЯ ЛОГОВ */
 	static string  GetTime();
 
 	static ofstream		Log;

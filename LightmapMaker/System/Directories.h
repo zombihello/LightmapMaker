@@ -3,8 +3,8 @@
 //				*** LightmapMaker ***
 //				  Copyright (C) 2018
 //
-// —в¤зь со мной:		https://vk.com/zombihello
-// –епозиторий движка:  https://github.com/zombihello/LightmapMaker
+// Связь со мной:		https://vk.com/zombihello
+// Репозиторий движка:  https://github.com/zombihello/LightmapMaker
 // 
 //////////////////////////////////////////////////////////////////////////
 
@@ -12,14 +12,14 @@
 #define DIRECTORIES_H
 
 ///////////////////////////
-// —»—“≈ћЌџ≈ Ѕ»ЅЋ»ќ“≈ »
+// СИСТЕМНЫЕ БИБЛИОТЕКИ
 ///////////////////////////
 #include <string>
 using namespace std;
 
 struct Directories
 {
-	/* »нициализировать все директории */
+	/* ИНИЦИАЛИЗИРОВАТЬ ВСЕ ДИРЕКТОРИИ */
 	static void InitDirectories( const string& ExecutablePath, const string& RouteToMap, const string& ShaderDirectory, const string& LogDirectory );
 
 	static string		WorkDirectory;

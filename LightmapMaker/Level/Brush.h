@@ -8,30 +8,42 @@
 // 
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef OPENGL_H
-#define OPENGL_H
+#ifndef BRUSH_H
+#define BRUSH_H
 
 ///////////////////////////
 // СИСТЕМНЫЕ БИБЛИОТЕКИ
 ///////////////////////////
-#include <glew\glew.h>
-#include <glm\glm.hpp>
-#include <SFML\Graphics.hpp>
+#include <vector>
+#include <tinyxml.h>
+using namespace std;
 
 ///////////////////////////
 // LIGHTMAPMAKER
 ///////////////////////////
-#include "Shader.h"
-#include "VAO.h"
+#include "Plane.h"
 
-//-------------------------------------------------------------------------//
-
-namespace OpenGL_API
+class Brush
 {
-	/* ИНИЦИАЛИЗИРОВАТЬ OPENGL */
-	void InitOpenGL( sf::RenderWindow& RenderWindow );
-}
+public:
+	/* ДЕСТРУКТОР */
+	~Brush();
 
-//-------------------------------------------------------------------------//
+	/* СОЗДАТЬ БРАШ */
+	void Create( TiXmlElement& Element );
 
-#endif // !OPENGL_H
+	/* ОТРЕНДЕРИТЬ БРАШ */
+	void Render();
+
+	/* ПОЛУЧИТЬ ВСЕ ПЛОСКОСТИ БРАША */
+	vector<Plane*>& GetPlanes();
+
+private:
+	GLuint							VertexBuffer;
+	vector<Plane*>					Planes;
+
+	static vector<unsigned int>		IdVertex;
+};
+
+#endif // !BRUSH_H
+

@@ -3,8 +3,8 @@
 //				*** LightmapMaker ***
 //				  Copyright (C) 2018
 //
-// —в¤зь со мной:		https://vk.com/zombihello
-// –епозиторий движка:  https://github.com/zombihello/LightmapMaker
+// Связь со мной:		https://vk.com/zombihello
+// Репозиторий движка:  https://github.com/zombihello/LightmapMaker
 // 
 //////////////////////////////////////////////////////////////////////////
 
@@ -12,17 +12,17 @@
 #define ARGUMENTS_START_H
 
 ///////////////////////////
-// —»—“≈ћЌџ≈ Ѕ»ЅЋ»ќ“≈ »
+// СИСТЕМНЫЕ БИБЛИОТЕКИ
 ///////////////////////////
 #include <string>
 using namespace std;
 
 struct ArgumentsStart
 {
-	/* —читать аргументы запуска программы */
+	/* СЧИТАТЬ АРГУМЕНТЫ ЗАПУСКА ПРОГРАММЫ */
 	static void InitArgumentsStart( int argc, char** argv );
 
-	/* ѕоказать все комманды запуска программы */
+	/* ПОКАЗАТЬ ВСЕ КОММАНДЫ ЗАПУСКА ПРОГРАММЫ */
 	static void ShowHelp();
 
 	static bool					IsDisableShadow;

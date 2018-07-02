@@ -28,28 +28,28 @@ namespace OpenGL_API
 	class Shader
 	{
 	public:
-		/* Конструктор */
+		/* КОНСТРУКТОР */
 		Shader();
 		Shader( map<string, int>& AttribLocation );
 
-		/* Деструктор */
+		/* ДЕСТРУКТОР */
 		~Shader();
 
-		/* Активировать выбранный шейдер */
+		/* АКТИВИРОВАТЬ ВЫБРАНЫЙ ШЕЙДЕР */
 		static void Bind( const Shader* Shader );
 
-		/* Загрузить шейдер с файла */
+		/* ЗАГРУЗИТЬ ШЕЙДЕР С ФАЙЛА */
 		bool LoadFromFile( const string& VertexShader, const string& FragmentShader );
 		bool LoadFromFile( const string& VertexShader, const string& GeometryShader, const string& FragmentShader );
 
-		/* Загрузить шейдер с памяти */
+		/* ЗАГРУЗИТЬ ШЕЙДЕР С ПАМЯТИ */
 		bool LoadFromMemory( const string& VertexShader, const string& FragmentShader );
 		bool LoadFromMemory( const string& VertexShader, const string& GeometryShader, const string& FragmentShader );
 
-		/* Задать позицию атрибутов вершин в шейдере (применять перед загрузкой шейдера) */
+		/* ЗАДАТЬ ПОЗИЦИЮ АТРИБУТОВ ВЕРШИН В ШЕЙДЕРЕ (ПРИМЕНЯТЬ ПЕРЕД ЗАГРУЗКОЙ ШЕЙДЕРА) */
 		void SetAttribLocation( map<string, int>& AttribLocation );
 
-		/* Задать значение юниформ переменной */
+		/* ЗАДАТЬ ЗНАЧЕНИЕ ЮНИФОРМ-ПЕРЕМЕННОЙ */
 		void SetUniform( const std::string& Name, bool X );	
 		void SetUniform( const std::string& Name, int X );
 		void SetUniform( const std::string& Name, float X );
@@ -59,15 +59,15 @@ namespace OpenGL_API
 		void SetUniform( const std::string& Name, glm::vec3& Vector3 );
 		void SetUniform( const std::string& Name, glm::vec4& Vector4 );
 
-		/* Получить ID шейдера в OpenGL */
+		/* ПОЛУЧИТЬ ID ШЕЙДЕРА В OPENGL */
 		const GLuint& GetNativeHandle();
 
 	private:
 
-		/* Скомпилировать шейдер */
+		/* СКОМПИЛИРОВАТЬ ШЕЙДЕР */
 		bool Compile( const string& VertexShader, const string& GeometryShader, const string& FragmentShader );
 
-		/* Получить идентификатор расположения юниформ переменной */
+		/* ПОЛУЧИТЬ ИДЕНТИФИГАТОР РАСПОЛОЖЕНИЯ ЮНИФОРМ-ПЕРЕМЕННОЙ */
 		int GetUniformLocation( const string& NameUniform );
 
 		GLuint					VertexID;

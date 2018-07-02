@@ -195,7 +195,7 @@
 </Solid>
 </Brushes>
 <Entitys>
-<Entity Name="light">
+<Entity Name="Static_Light">
 <Position X="-48" Y="16" Z="112"/>
 <Value Name="Name" Value=""/>
 <Value Name="Color" Value="255 255 255"/>
