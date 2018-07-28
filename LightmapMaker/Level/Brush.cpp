@@ -2,7 +2,6 @@
 // LIGHTMAPMAKER
 ///////////////////////////
 #include "Brush.h"
-#include "BrushVertex.h"
 
 //-------------------------------------------------------------------------//
 
@@ -42,10 +41,12 @@ Brush::~Brush()
 void Brush::Create( TiXmlElement& Element )
 {
 	glm::vec3							TempVector3;
+	glm::vec2							TempVector2;
 	vector<glm::vec3>					Vertexs;
 	vector<glm::vec2>					TexCoords;
 	vector<BrushVertex>					BrushVertexs;
 	map<int, vector<unsigned int> >		PlaneIdVertex;
+	map<int, vector<BrushVertex> >		PlaneVertex;
 
 	// ****************************
 	// Загружаем позиции вершин
@@ -71,7 +72,23 @@ void Brush::Create( TiXmlElement& Element )
 
 	// ****************************************************
 	// Загружаем текстурные координаты для карты освещения
-	//TODO: [zombiHello] - Сделать загрузку\просчет текстурных координат для карты освещения
+
+	TiXmlElement *xml_TexCoord;
+	xml_TexCoord = Element.FirstChildElement( "TextureCoords_LightMap" );
+
+	if ( xml_TexCoord )
+	{
+		TiXmlElement *xml_Point = xml_TexCoord->FirstChildElement( "Point" );
+
+		while ( xml_Point )
+		{
+			TempVector2.x = static_cast< float >( atof( xml_Point->Attribute( "X" ) ) );
+			TempVector2.y = static_cast< float >( atof( xml_Point->Attribute( "Y" ) ) );
+
+			TexCoords.push_back( TempVector2 );
+			xml_Point = xml_Point->NextSiblingElement();
+		}
+	}
 
 	// ****************************************************
 	// Объеденяем позици и текстурные координаты в одну вершину для OpenGL'a
@@ -80,7 +97,7 @@ void Brush::Create( TiXmlElement& Element )
 	for ( size_t Id = 0, Face = 0, VertexInFace = 0; Id < IdVertex.size(); Id++, VertexInFace++ )
 	{
 		TempVertex.Position = Vertexs[ IdVertex[ Id ] ];
-		TempVertex.TextureCoord_LightMap = glm::vec2( TempVertex.Position.x / 2, TempVertex.Position.y / 3 );
+		TempVertex.TextureCoord_LightMap = TexCoords[ Id ];
 
 		bool IsFindInArray = false;
 		for ( size_t i = 0; i < BrushVertexs.size(); i++ )
@@ -105,6 +122,13 @@ void Brush::Create( TiXmlElement& Element )
 	}
 
 	// ****************************************************
+	// Распределяем вершины на стороны
+
+	for ( int Face = 0; Face < 6; Face++ )
+		for ( size_t Id = 0; Id < PlaneIdVertex[ Face ].size(); Id++ )
+			PlaneVertex[ Face ].push_back( BrushVertexs[ PlaneIdVertex[ Face ][ Id ] ] );
+
+	// ****************************************************
 	// Инициализируем плоскости браша
 
 	Plane* TempPlane;
@@ -113,8 +137,8 @@ void Brush::Create( TiXmlElement& Element )
 	for ( size_t Face = 0; Face < 6; Face++ )
 	{
 		TempPlane = new Plane();
-		TempPlane->InitPlane( VertexBuffer, PlaneIdVertex[ Face ] );
-		Planes.push_back( TempPlane );		
+		TempPlane->InitPlane( VertexBuffer, PlaneIdVertex[ Face ], PlaneVertex[ Face ] );
+		Planes.push_back( TempPlane );
 	}
 }
 

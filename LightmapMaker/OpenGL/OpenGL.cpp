@@ -21,8 +21,8 @@ void OpenGL_API::InitOpenGL( sf::RenderWindow& RenderWindow )
 	glewExperimental = GL_TRUE;
 
 	// TODO: [zombiHello] - 256 поменять на переменную отвечающую за размер RenderTexture
-	RenderWindow.create( sf::VideoMode( 256, 256 ), "", sf::Style::None, ContextSettings );
-	ShowWindow( RenderWindow.getSystemHandle(), false );
+	RenderWindow.create( sf::VideoMode( 800, 600 ), "", sf::Style::Default, ContextSettings );
+	//ShowWindow( RenderWindow.getSystemHandle(), false );
 
 	// Выводим данные об OpenGL
 	int MajorVersion = 0, MinorVersion = 0;

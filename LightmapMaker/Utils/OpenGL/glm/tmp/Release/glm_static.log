@@ -1,5 +1,2 @@
 ﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(367,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
-  dummy.cpp
-  glm.cpp
-  Создание кода...
-  glm_static.vcxproj -> E:\Egor\projects\C++\GameEngine\LightmapMaker\LightmapMaker\Utils\OpenGL\glm\glm\..\lib\glm.lib
+  glm_static.vcxproj -> D:\Projects\C++\GameEngine\LightmapMaker\LightmapMaker\Utils\OpenGL\glm\glm\..\lib\glm.lib

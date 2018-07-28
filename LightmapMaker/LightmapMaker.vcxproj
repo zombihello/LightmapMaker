@@ -169,7 +169,9 @@
     <ClCompile Include="Level\BrushVertex.cpp" />
     <ClCompile Include="Level\Level.cpp" />
     <ClCompile Include="Level\Plane.cpp" />
+    <ClCompile Include="Level\Triangle.cpp" />
     <ClCompile Include="LightmapMaker.cpp" />
+    <ClCompile Include="Light\Lightmap.cpp" />
     <ClCompile Include="Light\LightSphere.cpp" />
     <ClCompile Include="Light\PointLight.cpp" />
     <ClCompile Include="OpenGL\OpenGL.cpp" />
@@ -187,6 +189,8 @@
     <ClInclude Include="Level\BrushVertex.h" />
     <ClInclude Include="Level\Level.h" />
     <ClInclude Include="Level\Plane.h" />
+    <ClInclude Include="Level\Triangle.h" />
+    <ClInclude Include="Light\Lightmap.h" />
     <ClInclude Include="Light\LightSphere.h" />
     <ClInclude Include="Light\PointLight.h" />
     <ClInclude Include="OpenGL\OpenGL.h" />
