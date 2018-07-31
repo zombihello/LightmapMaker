@@ -19,41 +19,81 @@ void Triangle::InitTriangle( const BrushVertex& Vertex_A, const BrushVertex& Ver
 {
 	int Flag = 0;
 	float Distance, X, Y, Z;
-	glm::vec2 UVMin, UVMax, UVDelta;
+	glm::vec2 UVMin, UVMax, UVDelta, UV[ 3 ];
 	glm::vec3 Vect1, Vect2;
 
 	this->Vertex_A = Vertex_A;
 	this->Vertex_B = Vertex_B;
 	this->Vertex_C = Vertex_C;
 
-	Normal = glm::abs( glm::normalize( glm::cross( Vertex_B.Position - Vertex_A.Position, Vertex_C.Position - Vertex_A.Position ) ) );
+	Normal = glm::normalize( glm::cross( Vertex_B.Position - Vertex_A.Position, Vertex_C.Position - Vertex_A.Position ) );
 	Distance = -( Normal.x * Vertex_A.Position.x + Normal.y * Vertex_A.Position.y + Normal.z * Vertex_A.Position.z );
 
 	// ****************************
 	// ќпредел€ем тип плоскости
 
-	if ( Normal.x > Normal.y && Normal.x > Normal.z )
+	if ( abs( Normal.x ) > abs( Normal.y ) && abs( Normal.x ) > abs( Normal.z ) )
+	{
 		Flag = 1;
-	else if ( Normal.y > Normal.x && Normal.y > Normal.z )
+
+		UV[ 0 ].x = Vertex_A.Position.y;
+		UV[ 0 ].y = Vertex_A.Position.z;
+
+		UV[ 1 ].x = Vertex_B.Position.y;
+		UV[ 1 ].y = Vertex_B.Position.z;
+
+		UV[ 2 ].x = Vertex_C.Position.y;
+		UV[ 2 ].y = Vertex_C.Position.z;
+	}
+	else if ( abs( Normal.y ) > abs( Normal.x ) && abs( Normal.y ) > abs( Normal.z ) )
+	{
 		Flag = 2;
+
+		UV[ 0 ].x = Vertex_A.Position.x;
+		UV[ 0 ].y = Vertex_A.Position.z;
+
+		UV[ 1 ].x = Vertex_B.Position.x;
+		UV[ 1 ].y = Vertex_B.Position.z;
+
+		UV[ 2 ].x = Vertex_C.Position.x;
+		UV[ 2 ].y = Vertex_C.Position.z;
+	}
 	else
+	{
 		Flag = 3;
+
+		UV[ 0 ].x = Vertex_A.Position.x;
+		UV[ 0 ].y = Vertex_A.Position.y;
+
+		UV[ 1 ].x = Vertex_B.Position.x;
+		UV[ 1 ].y = Vertex_B.Position.y;
+
+		UV[ 2 ].x = Vertex_C.Position.x;
+		UV[ 2 ].y = Vertex_C.Position.y;
+	}
 
 	// ****************************
 	// Ќаходим минимальные, максимальные и разницу текстурных координат
 
-	UVMin = Vertex_A.TextureCoord_LightMap;
-	UVMax = Vertex_A.TextureCoord_LightMap;
+	UVMin = UV[ 0 ];
+	UVMax = UV[ 0 ];
 
-	FindMin( UVMin, Vertex_A.TextureCoord_LightMap, UVMin );
-	FindMin( UVMin, Vertex_B.TextureCoord_LightMap, UVMin );
-	FindMin( UVMin, Vertex_C.TextureCoord_LightMap, UVMin );
+	for ( int i = 0; i < 3; i++ )
+	{
+		if ( UV[ i ].x < UVMin.x )
+			UVMin.x = UV[ i ].x;
 
-	FindMax( UVMax, Vertex_A.TextureCoord_LightMap, UVMax );
-	FindMax( UVMax, Vertex_B.TextureCoord_LightMap, UVMax );
-	FindMax( UVMax, Vertex_C.TextureCoord_LightMap, UVMax );
+		if ( UV[ i ].y < UVMin.y )
+			UVMin.y = UV[ i ].y;
 
-	UVDelta = glm::abs( UVMax - UVDelta );
+		if ( UV[ i ].x > UVMax.x )
+			UVMax.x = UV[ i ].x;
+
+		if ( UV[ i ].y > UVMax.y )
+			UVMax.y = UV[ i ].y;
+	}
+
+	UVDelta = glm::abs( UVMax - UVMin );
 
 	// ****************************
 	// «адаем границы размера карты освещени€
@@ -131,22 +171,6 @@ void Triangle::InitTriangle( const BrushVertex& Vertex_A, const BrushVertex& Ver
 
 	Edge1 = Vect1 - UVVector;
 	Edge2 = Vect2 - UVVector;
-}
-
-//-------------------------------------------------------------------------//
-
-void Triangle::FindMin( const glm::vec2& Vec1, const glm::vec2& Vec2, glm::vec2& Out )
-{
-	if ( Vec2.x < Vec1.x ) Out.x = Vec2.x;
-	if ( Vec2.y < Vec1.y ) Out.y = Vec2.y;
-}
-
-//-------------------------------------------------------------------------//
-
-void Triangle::FindMax( const glm::vec2& Vec1, const glm::vec2& Vec2, glm::vec2& Out )
-{
-	if ( Vec2.x > Vec1.x ) Out.x = Vec2.x;
-	if ( Vec2.y > Vec1.y ) Out.y = Vec2.y;
 }
 
 //-------------------------------------------------------------------------//

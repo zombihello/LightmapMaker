@@ -24,23 +24,20 @@ void Lightmap::InitLightmap( Level& Level )
 }
 
 //-------------------------------------------------------------------------//
+
 #include "../System/Logger.h"
-float x = 0;
-float y = 0;
-float id = 0;
-float id2 = 0;
+
 
 void Lightmap::Generate( sf::RenderWindow& Window )
 {
 	// реярнбши йнд дкъ опнбепйх пемдепю апюьеи х рнвевмнцн хярнвмхйю яберю
 
-	
-	glm::vec2 UVFactor;
-	glm::vec3 Newedge1, Newedge2, PositionFragment;
-
 	sf::Event Event;
-	glm::mat4 Pojection = glm::perspective( glm::radians( 75.f ), 1.f, 0.1f, 1500.f );
-	Camera Camera( PositionFragment, glm::vec3( -64, 0, -64 ), glm::vec3( 0, 1, 0 ) );
+	sf::Vector2i MousePosition, CenterWindow( 800 / 2, 600 / 2 );
+	glm::vec3 Position = glm::vec3( 0, 0, 0 ), Direction;
+	glm::vec2 Angle;
+	glm::mat4 Pojection = glm::perspective( glm::radians( 90.f ), 1.f, 0.1f, 1500.f );
+	Camera Camera( Position, glm::vec3( -64, 0, -64 ), glm::vec3( 0, 1, 0 ) );
 	map<string, int> Attrib;
 
 	Attrib[ "Position" ] = 0;
@@ -56,99 +53,111 @@ void Lightmap::Generate( sf::RenderWindow& Window )
 	ShaderLight.LoadFromFile( Directories::ShaderDirectory + "\\vsl.vs", Directories::ShaderDirectory + "\\fsl.fs" );
 
 	glEnable( GL_DEPTH_TEST );
+	//glEnable( GL_CULL_FACE );
+
+	//--------------------------------------------
+
+	glm::vec3 PositionFragment, Newedge1, Newedge2;
+	glm::vec2 UVFactor;
+	int Id = 0;
+	bool f = false;
+
+	float x = 0, y = 0;
+
+	Triangle* Triangle = &Planes[ 0 ]->GetTriangles()[ 0 ];
+	UVFactor = glm::vec2( 0.5f / Triangle->SizeLightmap.x, 0.5f / Triangle->SizeLightmap.y );
+
+	Newedge1.x = Triangle->Edge1.x * UVFactor.x;
+	Newedge1.y = Triangle->Edge1.y * UVFactor.x;
+	Newedge1.z = Triangle->Edge1.z * UVFactor.x;
+	Newedge2.x = Triangle->Edge2.x * UVFactor.y;
+	Newedge2.y = Triangle->Edge2.y * UVFactor.y;
+	Newedge2.z = Triangle->Edge2.z * UVFactor.y;
+
+	PositionFragment = Triangle->UVVector + Newedge2 + Newedge1;
+
+	//--------------------------------------------
 
 	while ( Window.isOpen() )
 	{
 		while ( Window.pollEvent( Event ) )
 			if ( Event.type == sf::Event::Closed )
-				Window.close();
+				Window.close();		
 
-		Sleep( 200 );
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-		Triangle* Triangle = &Planes[ id ]->GetTriangles()[ id2 ];
-		UVFactor = glm::vec2( ( x + 0.5f ) / Triangle->SizeLightmap.x, ( y + 0.5f ) / Triangle->SizeLightmap.y );
+		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::E ) && !f )
+		{
+			Id++;
+			f = true;
 
-		Newedge1.x = Triangle->Edge1.x * UVFactor.x;
-		Newedge1.y = Triangle->Edge1.y * UVFactor.x;
-		Newedge1.z = Triangle->Edge1.z * UVFactor.x;
-		Newedge2.x = Triangle->Edge2.x * UVFactor.y;
-		Newedge2.y = Triangle->Edge2.y * UVFactor.y;
-		Newedge2.z = Triangle->Edge2.z * UVFactor.y;
+			if ( Id < Planes.size() )
+			{
+				Triangle = &Planes[ Id ]->GetTriangles()[ 0 ];
+				UVFactor = glm::vec2( 0.5f / Triangle->SizeLightmap.x, 0.5f / Triangle->SizeLightmap.y );
 
-		PositionFragment = Triangle->UVVector + Newedge2 + Newedge1;
+				Newedge1.x = Triangle->Edge1.x * UVFactor.x;
+				Newedge1.y = Triangle->Edge1.y * UVFactor.x;
+				Newedge1.z = Triangle->Edge1.z * UVFactor.x;
+				Newedge2.x = Triangle->Edge2.x * UVFactor.y;
+				Newedge2.y = Triangle->Edge2.y * UVFactor.y;
+				Newedge2.z = Triangle->Edge2.z * UVFactor.y;
+
+				PositionFragment = Triangle->UVVector + Newedge2 + Newedge1;
+			}
+		}
+		else if ( !sf::Keyboard::isKeyPressed( sf::Keyboard::E ) && f )
+			f = false;
+
+		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::A ) )
+			PositionFragment.x -= 0.05;
+
+		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::D ) )
+			PositionFragment.x += 0.05;
+
+		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::W ) )
+			PositionFragment.z += 0.05;
+
+		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::S ) )
+			PositionFragment.z -= 0.05;
+
+		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Escape ) )
+			Window.close();
 
 		Camera.SetPosition( PositionFragment );
 
-		if ( x >= Triangle->SizeLightmap.x )
-			x = -1;
-		else if ( x < Triangle->SizeLightmap.x )
-			x++;
-
-		if ( y >= Triangle->SizeLightmap.y )
-			y = -1;
-		else if ( y < Triangle->SizeLightmap.y )
-			y++;
-
-		if ( x == -1 && y == -1 )
+		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Q ) )
 		{
-			id2++;
-			x = y = 0;
+			MousePosition = sf::Mouse::getPosition( Window );
+
+			float OffsetX = ( MousePosition.x - CenterWindow.x ) * 0.15;
+			float OffsetY = ( CenterWindow.y - MousePosition.y ) * 0.15;
+
+			Angle.x += glm::radians( OffsetX );
+			Angle.y += glm::radians( OffsetY );
+
+			if ( Angle.y < -1.55f )
+				Angle.y = -1.55f;
+			else if ( Angle.y > 1.55f )
+				Angle.y = 1.55f;
+
+			Direction.x = glm::cos( Angle.x ) * glm::cos( Angle.y );
+			Direction.y = glm::sin( Angle.y );
+			Direction.z = glm::sin( Angle.x ) * glm::cos( Angle.y );
+			Direction = glm::normalize( Direction );
+
+			Camera.SetTargetPoint( PositionFragment + Direction );
+			sf::Mouse::setPosition( CenterWindow, Window );
 		}
-
-		if ( id2 > Planes[ id ]->GetTriangles().size() )
-		{
-			id2 = -1;
-		}
-
-		if ( id2 == -1 )
-		{
-			id++;
-			id2 = 0;
-			x = y = 0;
-		}
-
-		if ( id > Planes.size() )
-		{
-			id = 0;
-			id2 = 0;
-			x = y = 0;
-		}
-
-		PRINT_LOG( "id " << id << " id2 " << id2 );
-
-		//if ( sf::Keyboard::isKeyPressed( sf::Keyboard::A ) )
-		//	Position.x -= 0.05;
-
-		//if ( sf::Keyboard::isKeyPressed( sf::Keyboard::D ) )
-		//	Position.x += 0.05;
-
-		//if ( sf::Keyboard::isKeyPressed( sf::Keyboard::W ) )
-		//	Position.z += 0.05;
-
-		//if ( sf::Keyboard::isKeyPressed( sf::Keyboard::S ) )
-		//	Position.z -= 0.05;
+		else
+			Camera.SetTargetPoint( PositionFragment + Triangle->Normal );
 
 		glm::mat4 PV = Pojection * Camera.GetViewMatrix();
 		Shader.SetUniform( "PV", PV );
-		ShaderLight.SetUniform( "PV", PV );
 
 		OpenGL_API::Shader::Bind( &Shader );
 		for ( size_t i = 0; i < Planes.size(); i++ )
 			Planes[ i ]->Render();
-
-		OpenGL_API::Shader::Bind( &ShaderLight );
-
-		/*for ( size_t i = 0; i < PointLights->size(); i++ )
-		{
-			glm::vec4 Color = PointLights->at( i ).Color;
-			glm::mat4 Mat = PointLights->at( i ).LightSphere.GetTransformation();
-
-			ShaderLight.SetUniform( "Color", Color );
-			ShaderLight.SetUniform( "TR", Mat );
-			PointLights->at( i ).LightSphere.Render();
-		}*/
-
 		OpenGL_API::Shader::Bind( NULL );
 
 		Window.display();

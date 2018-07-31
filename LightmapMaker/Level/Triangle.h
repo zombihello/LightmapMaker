@@ -40,14 +40,6 @@ struct Triangle
 	glm::vec3		UVVector;
 	glm::vec3		Edge1;
 	glm::vec3		Edge2;
-
-private:
-
-	/* мюирх лхмхлюкэмше гмювемхъ б бейрнпюу */
-	void FindMin( const glm::vec2& Vec1, const glm::vec2& Vec2, glm::vec2& Out );
-
-	/* мюирх люйяхлюкэмше гмювемхъ б бейрнпюу */
-	void FindMax( const glm::vec2& Vec1, const glm::vec2& Vec2, glm::vec2& Out );
 };
 
 #endif // !TRIANGLE_H

@@ -14,8 +14,8 @@ void Plane::InitPlane( const GLuint& VertexBuffer, const vector<unsigned int>& P
 	CountIndexs = PlaneIdVertex.size();
 	VAO.Create<BrushVertex>( VertexBuffer, PlaneIdVertex, OpenGL_API::VAO::Static_Draw, OFFSET_BRUSH_POSITION, OFFSET_BRUSH_TEXCOORD );
 
-	for ( size_t Id = 0; Id < PlaneVertexes.size() / 3; Id += 3 )
-		Triangles.push_back( Triangle( PlaneVertexes[ Id ], PlaneVertexes[ Id + 1 ], PlaneVertexes[ Id + 2 ] ) );
+	for ( size_t TriangleCount = 0, Vertex_Id = 0; TriangleCount < PlaneVertexes.size() / 3; TriangleCount++, Vertex_Id += 3 )
+		Triangles.push_back( Triangle( PlaneVertexes[ Vertex_Id ], PlaneVertexes[ Vertex_Id + 1 ], PlaneVertexes[ Vertex_Id + 2 ] ) );
 }
 
 //-------------------------------------------------------------------------//
