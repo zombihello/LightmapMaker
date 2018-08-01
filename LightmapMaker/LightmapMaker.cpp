@@ -14,8 +14,6 @@
 #include "System\ArgumentsStart.h"
 #include "System\Directories.h"
 #include "System\Logger.h"
-#include "System\Error.h"
-#include "OpenGL\OpenGL.h"
 #include "Level\Level.h"
 #include "Light\Lightmap.h"
 #include "BuildNumber.h"
@@ -37,11 +35,12 @@ int main( int argc, char** argv )
 		Directories::InitDirectories( argv[ 0 ], ArgumentsStart::RouteToMap, "shaders", "logs" );
 		Logger::CreateLogFile();
 
-		PRINT_LOG( LIGHTMAPMAKER << " (Build " << BUILD_NUMBER << ")" );
-		PRINT_LOG( " - Route To Map: " << ArgumentsStart::RouteToMap );
-		PRINT_LOG( " - Max Size Lightmap: " << ArgumentsStart::MaxSizeLightmap );
-		PRINT_LOG( " - Radiosity Number Passes: " << ArgumentsStart::RadiosityNumberPasses );
-		PRINT_LOG( "" );
+		PRINT_LOG( LIGHTMAPMAKER << " (Build " << BUILD_NUMBER << ")\n" );
+		PRINT_LOG( " - Route To Map: " << ArgumentsStart::RouteToMap << endl );
+		PRINT_LOG( " - Max Size Lightmap: " << ArgumentsStart::MaxSizeLightmap << endl );
+		PRINT_LOG( " - Size Render Texture: " << ArgumentsStart::SizeRenderTexture << endl );
+		PRINT_LOG( " - Radiosity Number Passes: " << ArgumentsStart::RadiosityNumberPasses << endl );
+		PRINT_LOG( "\n" );
 
 		// ***********************************
 		// Инициализируем контекст OpenGL'a и все шейдера
@@ -57,16 +56,16 @@ int main( int argc, char** argv )
 		// ***********************************
 		// Инициализируем данный для просчета карт освещения и генерируем ее
 
+		PRINT_LOG( "\n" );
 		Lightmap.InitLightmap( Level );
-		Lightmap.Generate( Window );
+		Lightmap.Generate();
 
-		PRINT_LOG( "" );
+		PRINT_LOG( "\n" );
 		if ( !ArgumentsStart::IsSaveLog ) Logger::DeleteLogFile();
 	}
 	else
 		ArgumentsStart::ShowHelp();
 
-	system( "pause" );
 	return 0;
 }
 

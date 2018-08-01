@@ -80,14 +80,14 @@ bool Shader::LoadFromFile( const string& VertexShader, const string& FragmentSha
 	// Загружаем код вершиного шейдера
 	if ( !GetShaderCode( VertexShader, VertexShader_Code ) )
 	{
-		PRINT_LOG( "Error: File [" << VertexShader << "] Not Found" );
+		PRINT_LOG( "Error: File [" << VertexShader << "] Not Found\n" );
 		return false;
 	}
 
 	// Загружаем код фрагментного шейдера
 	if ( !GetShaderCode( FragmentShader, FragmentShader_Code ) )
 	{
-		PRINT_LOG( "Error: File [" << FragmentShader << "] Not Found" );
+		PRINT_LOG( "Error: File [" << FragmentShader << "] Not Found\n" );
 		return false;
 	}
 
@@ -106,21 +106,21 @@ bool Shader::LoadFromFile( const string& VertexShader, const string& GeometrySha
 	// Загружаем код вершиного шейдера
 	if ( !GetShaderCode( VertexShader, VertexShader_Code ) )
 	{
-		PRINT_LOG( "Error: File [" << VertexShader << "] Not Found" );
+		PRINT_LOG( "Error: File [" << VertexShader << "] Not Found\n" );
 		return false;
 	}
 
 	// Загружаем код геометрического шейдера
 	if ( !GetShaderCode( GeometryShader, GeometryShader_Code ) )
 	{
-		PRINT_LOG( "Error: File [" << GeometryShader << "] Not Found" );
+		PRINT_LOG( "Error: File [" << GeometryShader << "] Not Found\n" );
 		return false;
 	}
 
 	// Загружаем код фрагментного шейдера
 	if ( !GetShaderCode( FragmentShader, FragmentShader_Code ) )
 	{
-		PRINT_LOG( "Error: File [" << FragmentShader << "] Not Found" );
+		PRINT_LOG( "Error: File [" << FragmentShader << "] Not Found\n" );
 		return false;
 	}
 
@@ -204,10 +204,10 @@ bool Shader::Compile( const string& VertexShader, const string& GeometryShader, 
 			if ( Error[ LengthLog - 2 ] == '\n' )
 				Error[ LengthLog - 2 ] = '\0';
 
-			PRINT_LOG( "**** Shader Error ****" );
-			PRINT_LOG( "Failed To Compile Vertex Shader:" );
-			PRINT_LOG( Error );
-			PRINT_LOG( "**** Shader Error End ****" );
+			PRINT_LOG( "**** Shader Error ****\n" );
+			PRINT_LOG( "Failed To Compile Vertex Shader:\n" );
+			PRINT_LOG( Error << endl );
+			PRINT_LOG( "**** Shader Error End ****\n" );
 
 			delete[] Error;
 			glDeleteShader( VertexID );
@@ -250,10 +250,10 @@ bool Shader::Compile( const string& VertexShader, const string& GeometryShader, 
 			if ( Error[ LengthLog - 2 ] == '\n' )
 				Error[ LengthLog - 2 ] = '\0';
 
-			PRINT_LOG( "**** Shader Error ****" );
-			PRINT_LOG( "Failed To Compile Geometry Shader:" );
-			PRINT_LOG( Error );
-			PRINT_LOG( "**** Shader Error End ****" );
+			PRINT_LOG( "**** Shader Error ****\n" );
+			PRINT_LOG( "Failed To Compile Geometry Shader:\n" );
+			PRINT_LOG( Error << endl );
+			PRINT_LOG( "**** Shader Error End ****\n" );
 
 			delete[] Error;
 			glDeleteShader( GeometryID );
@@ -296,10 +296,10 @@ bool Shader::Compile( const string& VertexShader, const string& GeometryShader, 
 			if ( Error[ LengthLog - 2 ] == '\n' )
 				Error[ LengthLog - 2 ] = '\0';
 
-			PRINT_LOG( "**** Shader Error ****" );
-			PRINT_LOG( "Failed To Compile Fragment Shader:" );
-			PRINT_LOG( Error );
-			PRINT_LOG( "**** Shader Error End ****" );
+			PRINT_LOG( "**** Shader Error ****\n" );
+			PRINT_LOG( "Failed To Compile Fragment Shader:\n" );
+			PRINT_LOG( Error << endl );
+			PRINT_LOG( "**** Shader Error End ****\n" );
 
 			delete[] Error;
 			glDeleteShader( FragmentID );
@@ -340,10 +340,10 @@ bool Shader::Compile( const string& VertexShader, const string& GeometryShader, 
 		if ( Error[ LengthLog - 2 ] == '\n' )
 			Error[ LengthLog - 2 ] = '\0';
 
-		PRINT_LOG( "**** Shader Error ****" );
-		PRINT_LOG( "Failed To Link Shader:" );
-		PRINT_LOG( Error );
-		PRINT_LOG( "**** Shader Error End ****" );
+		PRINT_LOG( "**** Shader Error ****\n" );
+		PRINT_LOG( "Failed To Link Shader:\n" );
+		PRINT_LOG( Error << endl );
+		PRINT_LOG( "**** Shader Error End ****\n" );
 
 		delete[] Error;
 		glDeleteShader( VertexID );
@@ -541,7 +541,7 @@ int Shader::GetUniformLocation( const string& NameUniform )
 		Uniforms.insert( std::make_pair( NameUniform, Location ) );
 
 		if ( Location == -1 )
-			PRINT_LOG( "Uniform [" << NameUniform << "] Not Found In Shader" );
+			PRINT_LOG( "Uniform [" << NameUniform << "] Not Found In Shader\n" );
 
 		return Location;
 	}

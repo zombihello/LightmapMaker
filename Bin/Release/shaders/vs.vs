@@ -1,14 +1,17 @@
 #version 130
 
 in vec3 Position;
-in vec2 TexCoord;
+in vec2 TexCoord0;
+in vec2 TexCoord1;
 
-out vec2 out_TexCoord;
+out vec2 out_TexCoord0;
+out vec2 out_TexCoord1;
 
 uniform mat4 PV;
 
 void main()
 {
-	out_TexCoord = TexCoord;
+	out_TexCoord0 = TexCoord0;
+	out_TexCoord1 = TexCoord1;
 	gl_Position = PV * vec4( Position, 1.0f );
 }

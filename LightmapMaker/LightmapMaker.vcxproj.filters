@@ -64,6 +64,9 @@
     <ClCompile Include="OpenGL\RenderTexture.cpp">
       <Filter>OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="System\ResourcesManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BuildNumber.h" />
@@ -114,6 +117,9 @@
     </ClInclude>
     <ClInclude Include="OpenGL\RenderTexture.h">
       <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="System\ResourcesManager.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

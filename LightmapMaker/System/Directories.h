@@ -25,6 +25,7 @@ struct Directories
 	static string		WorkDirectory;
 	static string		ShaderDirectory;
 	static string		LogDirectory;
+	static string		TexturesDirectory;
 	static string		SaveLightmapDirectory;
 };
 

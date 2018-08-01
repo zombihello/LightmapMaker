@@ -1,5 +1,22 @@
-#include "Lightmap.h"
+п»ї///////////////////////////
+// РЎРРЎРўР•РњРќР«Р• Р‘РР‘Р›РРћРўР•РљР
+///////////////////////////
+#include <sstream>
+#include <iomanip>
 #include <glm\gtx\transform.hpp>
+using namespace std;
+
+///////////////////////////
+// LIGHTMAPMAKER
+///////////////////////////
+#include "Lightmap.h"
+
+//-------------------------------------------------------------------------//
+
+Lightmap::~Lightmap()
+{
+	ResourcesManager::DeleteAllShaders();
+}
 
 //-------------------------------------------------------------------------//
 
@@ -12,7 +29,7 @@ void Lightmap::InitLightmap( Level& Level )
 	RenderTexture.Create( ArgumentsStart::SizeRenderTexture, ArgumentsStart::SizeRenderTexture );
 
 	// ***********************************
-	// Разбиваем браши на плоскости
+	// Р Р°Р·Р±РёРІР°РµРј Р±СЂР°С€Рё РЅР° РїР»РѕСЃРєРѕСЃС‚Рё
 
 	for ( size_t Id_Brush = 0; Id_Brush < Brushes.size(); Id_Brush++ )
 	{
@@ -25,42 +42,56 @@ void Lightmap::InitLightmap( Level& Level )
 	PointLights = &Level.GetPointLights();
 
 	// ***********************************
-	// Загружаем шейдера
+	// Р—Р°РіСЂСѓР¶Р°РµРј С€РµР№РґРµСЂР°
 
 	map<string, int> AttribLocation;
 	AttribLocation[ "Position" ] = 0;
-	AttribLocation[ "TexCoord" ] = 1;
+	AttribLocation[ "TexCoord0" ] = 1;
+	AttribLocation[ "TexCoord1" ] = 2;
 
-	Shader_RenderPlane.SetAttribLocation( AttribLocation );
-	Shader_RenderLight.SetAttribLocation( AttribLocation );
+	Shader_RenderPlane = ResourcesManager::CreateShader( "RenderPlane" );
+	Shader_RenderLight = ResourcesManager::CreateShader( "RenderLight" );
 
-	if ( !Shader_RenderPlane.LoadFromFile( Directories::ShaderDirectory + "\\vs.vs", Directories::ShaderDirectory + "\\fs.fs" ) )
+	Shader_RenderPlane->SetAttribLocation( AttribLocation );
+	Shader_RenderLight->SetAttribLocation( AttribLocation );
+
+	if ( !Shader_RenderPlane->LoadFromFile( Directories::ShaderDirectory + "\\vs.vs", Directories::ShaderDirectory + "\\fs.fs" ) ||
+		!Shader_RenderLight->LoadFromFile( Directories::ShaderDirectory + "\\vsl.vs", Directories::ShaderDirectory + "\\fsl.fs" ) )
 		Error( "Error Shader Load", "Error In Load Shader. Look Log File For Details", -1 );
 
-	if ( !Shader_RenderLight.LoadFromFile( Directories::ShaderDirectory + "\\vsl.vs", Directories::ShaderDirectory + "\\fsl.fs" ) )
-		Error( "Error Shader Load", "Error In Load Shader. Look Log File For Details", -1 );
+	Shader_RenderPlane->SetUniform( "DiffuseMap", 0 );
+	Shader_RenderPlane->SetUniform( "LightMap", 1 );
 }
 
 //-------------------------------------------------------------------------//
 
-void Lightmap::Generate( sf::RenderWindow& Window )
+void Lightmap::Generate()
 {
-	sf::Event Event;
-	glm::vec3 PositionFragment;
-	glm::vec2 SizeLightmap;
-	Plane* Plane;
+	PRINT_LOG( "*** Lightmaps Generate ***\n" );
+
+	stringstream		StreamMessage;
+	glm::vec3			PositionFragment, NormalizeCenter, Right;
+	glm::vec2			SizeLightmap;
+	Plane*				Plane;
+	size_t				CountPlanes = Planes.size() * ArgumentsStart::RadiosityNumberPasses;
+	size_t				ReadyPlanes = 0;
 
 	glEnable( GL_DEPTH_TEST );
-	glEnable( GL_TEXTURE_2D );
-	Camera.SetAxisVertical( glm::vec3( 0, 1, 0 ) );	
+	Camera.SetAxisVertical( glm::vec3( 0, 1, 0 ) );
 
 	// ****************************
-	// Генерируем карты освещения
+	// Р“РµРЅРµСЂРёСЂСѓРµРј РєР°СЂС‚С‹ РѕСЃРІРµС‰РµРЅРёСЏ
 
-	for ( size_t RadiosityStep = 0; RadiosityStep < 3; RadiosityStep++ )
+	for ( size_t RadiosityStep = 0; RadiosityStep < ArgumentsStart::RadiosityNumberPasses; RadiosityStep++ )
 	{
-		for ( size_t IdPlane = 0; IdPlane < Planes.size(); IdPlane++ )
+		for ( size_t IdPlane = 0; IdPlane < Planes.size(); IdPlane++, ReadyPlanes++ )
 		{
+			StreamMessage.str( "" );
+			StreamMessage << "| Radiosity Step: " << RadiosityStep + 1 << "/" << ArgumentsStart::RadiosityNumberPasses;
+
+			Logger::PrintProgressBar( ReadyPlanes, CountPlanes, 30, StreamMessage.str() );
+
+
 			Plane = Planes[ IdPlane ];
 			SizeLightmap = Plane->GetSizeLightmap();
 
@@ -72,8 +103,13 @@ void Lightmap::Generate( sf::RenderWindow& Window )
 					Camera.SetPosition( PositionFragment );
 					Camera.SetTargetPoint( PositionFragment + Plane->GetNormal() );
 
-					Plane->GetDataLightMap().setPixel( x, y, PathRender() );
-				}			
+					NormalizeCenter = glm::normalize( Camera.GetTargetPoint() );
+					Right = glm::normalize( glm::cross( glm::vec3( 0, 1, 0 ), NormalizeCenter ) );
+
+					Camera.SetAxisVertical( glm::normalize( glm::cross( NormalizeCenter, Right ) ) );
+
+					Plane->GetDataLightMap().setPixel( ( size_t ) x, ( size_t ) y, PathRender() );
+				}
 		}
 
 		for ( size_t IdPlane = 0; IdPlane < Planes.size(); IdPlane++ )
@@ -86,43 +122,12 @@ void Lightmap::Generate( sf::RenderWindow& Window )
 		Plane->GetDataLightMap().saveToFile( Directories::SaveLightmapDirectory + "\\lm_" + to_string( IdPlane ) + ".png" );
 	}
 
-	Camera.SetPosition( glm::vec3( 0, 0, 0 ) );
-	Camera.SetTargetPoint( glm::vec3( -64, 0, -64 ) );
-	glm::vec3 Position;
+	StreamMessage.str( "" );
+	StreamMessage << "| Radiosity Step: " << ArgumentsStart::RadiosityNumberPasses << "/" << ArgumentsStart::RadiosityNumberPasses;
+	Logger::PrintProgressBar( CountPlanes, CountPlanes, 30, StreamMessage.str() );
+	END_LOG;
 
-	while ( Window.isOpen() )
-	{
-		while ( Window.pollEvent( Event ) )
-			if ( Event.type == sf::Event::Closed )
-				Window.close();
-
-		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-
-		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::A ) )
-			Position.x -= 0.05;
-
-		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::D ) )
-			Position.x += 0.05;
-
-		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::W ) )
-			Position.z += 0.05;
-
-		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::S ) )
-			Position.z -= 0.05;
-
-		Camera.SetPosition( Position );
-
-		PV = Projection * Camera.GetViewMatrix();
-		Shader_RenderPlane.SetUniform( "PV", PV );
-
-		OpenGL_API::Shader::Bind( &Shader_RenderPlane );
-
-		for ( size_t i = 0; i < Planes.size(); i++ )
-			Planes[ i ]->Render();
-
-		OpenGL_API::Shader::Bind( NULL );
-		Window.display();
-	}
+	PRINT_LOG( "*** Lightmaps Generated ***\n" );
 }
 
 //-------------------------------------------------------------------------//
@@ -134,7 +139,6 @@ sf::Color Lightmap::PathRender()
 	RenderTexture.Unbind();
 
 	glm::vec3 ColorPixel = RenderTexture.GetMediumColorTexture();
-	PRINT_LOG( ColorPixel.x << " " << ColorPixel.y << " " << ColorPixel.z );
 	return sf::Color( ColorPixel.x * 255.f, ColorPixel.y * 255.f, ColorPixel.z * 255.f, 255.f );
 }
 
@@ -143,26 +147,32 @@ sf::Color Lightmap::PathRender()
 void Lightmap::RenderScene()
 {
 	PV = Projection * Camera.GetViewMatrix();
-	Shader_RenderPlane.SetUniform( "PV", PV );
+	Shader_RenderPlane->SetUniform( "PV", PV );
 
 	// ****************************
-	// Рендерим плоскости брашей
+	// Р РµРЅРґРµСЂРёРј РїР»РѕСЃРєРѕСЃС‚Рё Р±СЂР°С€РµР№
 
-	OpenGL_API::Shader::Bind( &Shader_RenderPlane );
+	glEnable( GL_TEXTURE_2D );
+	glEnable( GL_CULL_FACE );
+
+	OpenGL_API::Shader::Bind( Shader_RenderPlane );
 
 	for ( size_t i = 0; i < Planes.size(); i++ )
 		Planes[ i ]->Render();
 
-	// ****************************
-	// Рендерим источники света
+	glDisable( GL_CULL_FACE );
+	glDisable( GL_TEXTURE_2D );
 
-	OpenGL_API::Shader::Bind( &Shader_RenderLight );
+	// ****************************
+	// Р РµРЅРґРµСЂРёРј РёСЃС‚РѕС‡РЅРёРєРё СЃРІРµС‚Р°
+
+	OpenGL_API::Shader::Bind( Shader_RenderLight );
 
 	for ( size_t i = 0; i < PointLights->size(); i++ )
 	{
 		PVT = PV * PointLights->at( i ).LightSphere.GetTransformation();
-		Shader_RenderLight.SetUniform( "PV", PVT );
-		Shader_RenderLight.SetUniform( "Color", PointLights->at( i ).Color );
+		Shader_RenderLight->SetUniform( "PV", PVT );
+		Shader_RenderLight->SetUniform( "Color", PointLights->at( i ).Color );
 
 		PointLights->at( i ).LightSphere.Render();
 	}

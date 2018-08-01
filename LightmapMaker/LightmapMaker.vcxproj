@@ -182,6 +182,7 @@
     <ClCompile Include="System\Directories.cpp" />
     <ClCompile Include="System\Error.cpp" />
     <ClCompile Include="System\Logger.cpp" />
+    <ClCompile Include="System\ResourcesManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BuildNumber.h" />
@@ -201,6 +202,7 @@
     <ClInclude Include="System\Directories.h" />
     <ClInclude Include="System\Error.h" />
     <ClInclude Include="System\Logger.h" />
+    <ClInclude Include="System\ResourcesManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

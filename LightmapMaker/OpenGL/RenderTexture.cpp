@@ -85,7 +85,7 @@ bool OpenGL_API::RenderTexture::Create( size_t Width, size_t Height )
 
 	if ( Status != GL_FRAMEBUFFER_COMPLETE )
 	{
-		PRINT_LOG( "Error: Render Texture Not Initialized. Framebuffer Status [0x" << Status << "]" );
+		PRINT_LOG( "Error: Render Texture Not Initialized. Framebuffer Status [0x" << Status << "]\n" );
 
 		glDeleteTextures( 1, &Texture );
 		glDeleteRenderbuffers( 1, &DepthBuffer );

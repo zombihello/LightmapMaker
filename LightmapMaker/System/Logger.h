@@ -12,7 +12,9 @@
 #define LOGGER_H
 
 #define LIGHTMAPMAKER "LightmapMaker 1.1.0"
-#define PRINT_LOG( X ) { Logger::Log << Logger::GetTime() << X << endl; cout << Logger::GetTime() << X << endl; }
+#define PRINT_LOG( X ) { Logger::Log << Logger::GetTime() << X; cout << Logger::GetTime() << X; }
+#define BACK_LOG { Logger::Log << "\r"; cout << "\r"; }
+#define END_LOG { Logger::Log << "\n"; cout << "\n"; }
 
 ///////////////////////////
 // СИСТЕМНЫЕ БИБЛИОТЕКИ
@@ -28,6 +30,9 @@ class Logger
 public:
 	/* СОЗДАТЬ ФАЙЛ ЛОГОВ */
 	static void CreateLogFile();
+
+	/* НАРИСОВАТЬ ПРОГРЕСС БАР */
+	static void PrintProgressBar( size_t TempValue, size_t MaxValue, size_t SizeProgressBar, const string& Message );
 
 	/* УДАЛИТЬ ФАЙЛ ЛОГОВ */
 	static void DeleteLogFile();

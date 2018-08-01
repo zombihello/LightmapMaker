@@ -12,7 +12,8 @@
 #define VAO_H
 
 #define VERT_POSITION 0
-#define VERT_TEXCOORD 1
+#define VERT_TEXCOORD0 1
+#define VERT_TEXCOORD1 2
 
 ///////////////////////////
 // СИСТЕМНЫЕ БИБЛИОТЕКИ
@@ -60,10 +61,10 @@ namespace OpenGL_API
 		template<typename T> static GLuint& CreateBuffer( TypeBuffer TypeBuffer, vector<T> Data, TypeUpdate Usage );
 
 		/* СОЗДАТЬ VAO */
-		template<typename T, typename C> void Create( const vector<T>& Data_VertexBuffer, TypeUpdate Usage_VertexBuffer, const vector<C>& Data_IndexBuffer, TypeUpdate Usage_IndexBuffer, const void* PointerPosition, const void* PointerTexCoord );
-		template<typename T, typename C> void Create( const GLuint& VertexBuffer, const vector<C>& Data_IndexBuffer, TypeUpdate Usage_IndexBuffer, const void* PointerPosition, const void* PointerTexCoord );
-		template<typename T, typename C> void Create( const vector<T>& Data_VertexBuffer, TypeUpdate Usage_VertexBuffer, const GLuint& IndexBuffer, const void* PointerPosition, const void* PointerTexCoord );
-		template<typename T> void Create( const GLuint& VertexBuffer, const GLuint& IndexBuffer, const void* PointerPosition, const void* PointerTexCoord );
+		template<typename T, typename C> void Create( const vector<T>& Data_VertexBuffer, TypeUpdate Usage_VertexBuffer, const vector<C>& Data_IndexBuffer, TypeUpdate Usage_IndexBuffer, const void* PointerPosition, const void* PointerTexCoord0, const void* PointerTexCoord1 );
+		template<typename T, typename C> void Create( const GLuint& VertexBuffer, const vector<C>& Data_IndexBuffer, TypeUpdate Usage_IndexBuffer, const void* PointerPosition, const void* PointerTexCoord0, const void* PointerTexCoord1 );
+		template<typename T, typename C> void Create( const vector<T>& Data_VertexBuffer, TypeUpdate Usage_VertexBuffer, const GLuint& IndexBuffer, const void* PointerPosition, const void* PointerTexCoord0, const void* PointerTexCoord1 );
+		template<typename T> void Create( const GLuint& VertexBuffer, const GLuint& IndexBuffer, const void* PointerPosition, const void* PointerTexCoord0, const void* PointerTexCoord1 );
 
 		/* СДЕЛАТЬ АКТИВНЫМ VAO */
 		void Bind();
@@ -106,7 +107,7 @@ namespace OpenGL_API
 	//-------------------------------------------------------------------------//
 
 	template<typename T, typename C>
-	inline void VAO::Create( const vector<T>& Data_VertexBuffer, TypeUpdate Usage_VertexBuffer, const vector<C>& Data_IndexBuffer, TypeUpdate Usage_IndexBuffer, const void* PointerPosition, const void* PointerTexCoord )
+	inline void VAO::Create( const vector<T>& Data_VertexBuffer, TypeUpdate Usage_VertexBuffer, const vector<C>& Data_IndexBuffer, TypeUpdate Usage_IndexBuffer, const void* PointerPosition, const void* PointerTexCoord0, const void* PointerTexCoord1 )
 	{
 		glGenVertexArrays( 1, &ArrayBuffer );  // VAO
 		glGenBuffers( 1, &VertexBuffer ); // буффер вершин
@@ -132,8 +133,11 @@ namespace OpenGL_API
 		glVertexAttribPointer( VERT_POSITION, 3, GL_FLOAT, GL_FALSE, sizeof( T ), PointerPosition );
 		glEnableVertexAttribArray( VERT_POSITION );
 
-		glVertexAttribPointer( VERT_TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof( T ), PointerTexCoord );
-		glEnableVertexAttribArray( VERT_TEXCOORD );
+		glVertexAttribPointer( VERT_TEXCOORD0, 2, GL_FLOAT, GL_FALSE, sizeof( T ), PointerTexCoord0 );
+		glEnableVertexAttribArray( VERT_TEXCOORD0 );
+
+		glVertexAttribPointer( VERT_TEXCOORD1, 2, GL_FLOAT, GL_FALSE, sizeof( T ), PointerTexCoord1 );
+		glEnableVertexAttribArray( VERT_TEXCOORD1 );
 
 		glBindVertexArray( 0 );
 		glBindBuffer( GL_ARRAY_BUFFER, 0 );
@@ -145,7 +149,7 @@ namespace OpenGL_API
 	//-------------------------------------------------------------------------//
 
 	template<typename T, typename C>
-	inline void VAO::Create( const GLuint& VertexBuffer, const vector<C>& Data_IndexBuffer, TypeUpdate Usage_IndexBuffer, const void * PointerPosition, const void * PointerTexCoord )
+	inline void VAO::Create( const GLuint& VertexBuffer, const vector<C>& Data_IndexBuffer, TypeUpdate Usage_IndexBuffer, const void * PointerPosition, const void * PointerTexCoord0, const void* PointerTexCoord1 )
 	{
 		glGenVertexArrays( 1, &ArrayBuffer );  // VAO
 		glGenBuffers( 1, &IndexBuffer ); // буффер индексов
@@ -165,8 +169,11 @@ namespace OpenGL_API
 		glVertexAttribPointer( VERT_POSITION, 3, GL_FLOAT, GL_FALSE, sizeof( T ), PointerPosition );
 		glEnableVertexAttribArray( VERT_POSITION );
 
-		glVertexAttribPointer( VERT_TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof( T ), PointerTexCoord );
-		glEnableVertexAttribArray( VERT_TEXCOORD );
+		glVertexAttribPointer( VERT_TEXCOORD0, 2, GL_FLOAT, GL_FALSE, sizeof( T ), PointerTexCoord0 );
+		glEnableVertexAttribArray( VERT_TEXCOORD0 );
+
+		glVertexAttribPointer( VERT_TEXCOORD1, 2, GL_FLOAT, GL_FALSE, sizeof( T ), PointerTexCoord1 );
+		glEnableVertexAttribArray( VERT_TEXCOORD1 );
 
 		glBindVertexArray( 0 );
 		glBindBuffer( GL_ARRAY_BUFFER, 0 );
@@ -178,7 +185,7 @@ namespace OpenGL_API
 	//-------------------------------------------------------------------------//
 
 	template<typename T, typename C>
-	inline void VAO::Create( const vector<T>& Data_VertexBuffer, TypeUpdate Usage_VertexBuffer, const GLuint & IndexBuffer, const void * PointerPosition, const void * PointerTexCoord )
+	inline void VAO::Create( const vector<T>& Data_VertexBuffer, TypeUpdate Usage_VertexBuffer, const GLuint & IndexBuffer, const void * PointerPosition, const void * PointerTexCoord0, const void* PointerTexCoord1 )
 	{
 		glGenVertexArrays( 1, &ArrayBuffer );  // VAO
 		glGenBuffers( 1, &VertexBuffer ); // буффер вершин
@@ -198,8 +205,11 @@ namespace OpenGL_API
 		glVertexAttribPointer( VERT_POSITION, 3, GL_FLOAT, GL_FALSE, sizeof( T ), PointerPosition );
 		glEnableVertexAttribArray( VERT_POSITION );
 
-		glVertexAttribPointer( VERT_TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof( T ), PointerTexCoord );
-		glEnableVertexAttribArray( VERT_TEXCOORD );
+		glVertexAttribPointer( VERT_TEXCOORD0, 2, GL_FLOAT, GL_FALSE, sizeof( T ), PointerTexCoord0 );
+		glEnableVertexAttribArray( VERT_TEXCOORD0 );
+
+		glVertexAttribPointer( VERT_TEXCOORD1, 2, GL_FLOAT, GL_FALSE, sizeof( T ), PointerTexCoord1 );
+		glEnableVertexAttribArray( VERT_TEXCOORD1 );
 
 		glBindVertexArray( 0 );
 		glBindBuffer( GL_ARRAY_BUFFER, 0 );
@@ -211,7 +221,7 @@ namespace OpenGL_API
 	//-------------------------------------------------------------------------//
 
 	template<typename T>
-	inline void VAO::Create( const GLuint & VertexBuffer, const GLuint & IndexBuffer, const void * PointerPosition, const void * PointerTexCoord )
+	inline void VAO::Create( const GLuint & VertexBuffer, const GLuint & IndexBuffer, const void * PointerPosition, const void * PointerTexCoord0, const void* PointerTexCoord1 )
 	{
 		glGenVertexArrays( 1, &ArrayBuffer );  // VAO
 
@@ -226,8 +236,11 @@ namespace OpenGL_API
 		glVertexAttribPointer( VERT_POSITION, 3, GL_FLOAT, GL_FALSE, sizeof( T ), PointerPosition );
 		glEnableVertexAttribArray( VERT_POSITION );
 
-		glVertexAttribPointer( VERT_TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof( T ), PointerTexCoord );
-		glEnableVertexAttribArray( VERT_TEXCOORD );
+		glVertexAttribPointer( VERT_TEXCOORD0, 2, GL_FLOAT, GL_FALSE, sizeof( T ), PointerTexCoord0 );
+		glEnableVertexAttribArray( VERT_TEXCOORD0 );
+
+		glVertexAttribPointer( VERT_TEXCOORD1, 2, GL_FLOAT, GL_FALSE, sizeof( T ), PointerTexCoord1 );
+		glEnableVertexAttribArray( VERT_TEXCOORD1 );
 
 		glBindVertexArray( 0 );
 		glBindBuffer( GL_ARRAY_BUFFER, 0 );

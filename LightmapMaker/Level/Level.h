@@ -23,6 +23,7 @@ using namespace std;
 ///////////////////////////
 // LIGHTMAPMAKER
 ///////////////////////////
+#include "../System/ResourcesManager.h"
 #include "../Light/PointLight.h"
 #include "Brush.h"
 

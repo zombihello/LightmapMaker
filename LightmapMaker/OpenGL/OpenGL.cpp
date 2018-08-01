@@ -20,21 +20,21 @@ void OpenGL_API::InitOpenGL( sf::RenderWindow& RenderWindow )
 	ContextSettings.stencilBits = 8;
 	glewExperimental = GL_TRUE;
 
-	RenderWindow.create( sf::VideoMode( ArgumentsStart::SizeRenderTexture, ArgumentsStart::SizeRenderTexture ), "", sf::Style::Default, ContextSettings );
-	//ShowWindow( RenderWindow.getSystemHandle(), false );
+	RenderWindow.create( sf::VideoMode( ArgumentsStart::SizeRenderTexture, ArgumentsStart::SizeRenderTexture ), "", sf::Style::None, ContextSettings );
+	ShowWindow( RenderWindow.getSystemHandle(), false );
 
 	// Выводим данные об OpenGL
 	int MajorVersion = 0, MinorVersion = 0;
 	string OpenGLVersion = ( const char* ) glGetString( GL_VERSION );
 	string GLSLVersion = ( const char* ) glGetString( GL_SHADING_LANGUAGE_VERSION );
 
-	PRINT_LOG( "*** OpenGL Info ***" );
-	PRINT_LOG( "  OpenGL Version: " << OpenGLVersion );
-	PRINT_LOG( "  OpenGL Vendor: " << glGetString( GL_VENDOR ) );
-	PRINT_LOG( "  OpenGL Renderer: " << glGetString( GL_RENDERER ) );
-	PRINT_LOG( "  OpenGL GLSL Version: " << GLSLVersion );
-	PRINT_LOG( "*** OpenGL Info End ***" );
-	PRINT_LOG( "" );
+	PRINT_LOG( "*** OpenGL Info ***\n" );
+	PRINT_LOG( "  OpenGL Version: " << OpenGLVersion << endl );
+	PRINT_LOG( "  OpenGL Vendor: " << glGetString( GL_VENDOR ) << endl );
+	PRINT_LOG( "  OpenGL Renderer: " << glGetString( GL_RENDERER ) << endl );
+	PRINT_LOG( "  OpenGL GLSL Version: " << GLSLVersion << endl );
+	PRINT_LOG( "*** OpenGL Info End ***\n" );
+	PRINT_LOG( "\n" );
 
 	if ( glewInit() != GLEW_OK )
 		Error( "Error Init OpenGL", "Error: OpenGL Context Is Broken", -1 );

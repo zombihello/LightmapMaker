@@ -17,6 +17,11 @@
 #include <string>
 using namespace std;
 
+///////////////////////////
+// LIGHTMAPMAKER
+///////////////////////////
+#include "Directories.h"
+
 struct ArgumentsStart
 {
 	/* СЧИТАТЬ АРГУМЕНТЫ ЗАПУСКА ПРОГРАММЫ */
@@ -25,7 +30,6 @@ struct ArgumentsStart
 	/* ПОКАЗАТЬ ВСЕ КОММАНДЫ ЗАПУСКА ПРОГРАММЫ */
 	static void ShowHelp();
 
-	static bool					IsDisableShadow;
 	static bool					IsSaveLog;
 	
 	static unsigned int			MaxSizeLightmap;

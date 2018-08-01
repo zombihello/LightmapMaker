@@ -16,6 +16,7 @@
 ///////////////////////////
 #include "../OpenGL/OpenGL.h"
 #include "../System/ArgumentsStart.h"
+#include "../System/ResourcesManager.h"
 #include "BrushVertex.h"
 
 class Plane
@@ -28,7 +29,7 @@ public:
 	~Plane();
 
 	/* ИНИЦИАЛИЗИРОВАТЬ ПЛОСКОСТЬ */
-	void InitPlane( const GLuint& VertexBuffer, const vector<unsigned int>& PlaneIdVertex, const vector<BrushVertex>& PlaneVertexes );
+	void InitPlane( const GLuint& VertexBuffer, const vector<unsigned int>& PlaneIdVertex, const vector<BrushVertex>& PlaneVertexes, const string& NameTexture );
 
 	/* ОТРЕНДЕРИТЬ ПЛОСКОСТЬ */
 	void Render();
@@ -51,6 +52,7 @@ public:
 private:
 	unsigned int			CountIndexs;
 
+	GLuint					GL_DiffuseMap;
 	GLuint					GL_LightMap;
 	sf::Image				Data_LightMap;
 	OpenGL_API::VAO			VAO;

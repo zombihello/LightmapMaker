@@ -1,10 +1,10 @@
-//////////////////////////////////////////////////////////////////////////
+Ôªø//////////////////////////////////////////////////////////////////////////
 // 
 //				*** LightmapMaker ***
 //				  Copyright (C) 2018
 //
-// —‚ˇÁ¸ ÒÓ ÏÌÓÈ:		https://vk.com/zombihello
-// –ÂÔÓÁËÚÓËÈ ‰‚ËÊÍ‡:  https://github.com/zombihello/LightmapMaker
+// –°–≤—è–∑—å —Å–æ –º–Ω–æ–π:		https://vk.com/zombihello
+// –†–µ–ø–æ–∑–∏—Ç–æ—Ä–∏–π –¥–≤–∏–∂–∫–∞:  https://github.com/zombihello/LightmapMaker
 // 
 //////////////////////////////////////////////////////////////////////////
 
@@ -24,17 +24,20 @@
 class Lightmap
 {
 public:
-	/* »Õ»÷»¿À»«»–Œ¬¿“‹ »Õ‘Œ–Ã¿÷»ﬁ ƒÀﬂ œ–Œ—◊≈“Œ¬ */
+	/* –î–ï–°–¢–†–£–ö–¢–û–† */
+	~Lightmap();
+
+	/* –ò–ù–ò–¶–ò–ê–õ–ò–ó–ò–†–û–í–ê–¢–¨ –ò–ù–§–û–†–ú–ê–¶–ò–Æ –î–õ–Ø –ü–†–û–°–ß–ï–¢–û–í */
 	void InitLightmap( Level& Level );
 
-	/* —√≈Õ≈–»–Œ¬¿“‹  ¿–“” Œ—¬≈Ÿ≈Õ»ﬂ */
-	void Generate( sf::RenderWindow& Window );
+	/* –°–ì–ï–ù–ï–†–ò–†–û–í–ê–¢–¨ –ö–ê–†–¢–£ –û–°–í–ï–©–ï–ù–ò–Ø */
+	void Generate();
 
 private:
-	/* Œ“–»—Œ¬¿“‹ —÷≈Õ” —Œ ¬«√Àﬂƒ¿ œ¿“◊¿ */
+	/* –û–¢–†–ò–°–û–í–ê–¢–¨ –°–¶–ï–ù–£ –°–û –í–ó–ì–õ–Ø–î–ê –ü–ê–¢–ß–ê */
 	sf::Color PathRender();
 
-	/* Œ“–»—Œ¬¿“‹ —÷≈Õ” */
+	/* –û–¢–†–ò–°–û–í–ê–¢–¨ –°–¶–ï–ù–£ */
 	void RenderScene();
 
 	glm::mat4						Projection;
@@ -42,8 +45,8 @@ private:
 	glm::mat4						PVT; // Projection * View * Transform
 
 	OpenGL_API::RenderTexture		RenderTexture;
-	OpenGL_API::Shader				Shader_RenderPlane;
-	OpenGL_API::Shader				Shader_RenderLight;
+	OpenGL_API::Shader*				Shader_RenderPlane;
+	OpenGL_API::Shader*				Shader_RenderLight;
 	Camera							Camera;
 
 	vector<Plane*>					Planes;

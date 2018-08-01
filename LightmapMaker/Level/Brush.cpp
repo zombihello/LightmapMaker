@@ -40,13 +40,24 @@ Brush::~Brush()
 
 void Brush::Create( TiXmlElement& Element )
 {
+	string								NameTexture;
 	glm::vec3							TempVector3;
 	glm::vec2							TempVector2;
 	vector<glm::vec3>					Vertexs;
-	vector<glm::vec2>					TexCoords;
+	vector<glm::vec2>					TexCoords_DiffuseMap;
+	vector<glm::vec2>					TexCoords_LightMap;
 	vector<BrushVertex>					BrushVertexs;
 	map<int, vector<unsigned int> >		PlaneIdVertex;
 	map<int, vector<BrushVertex> >		PlaneVertex;
+
+	// ****************************
+	// Загружаем идентификатор текстуры
+
+	TiXmlElement *xml_TextureName;
+	xml_TextureName = Element.FirstChildElement( "TextureName" );
+
+	if ( xml_TextureName )
+		NameTexture = xml_TextureName->Attribute( "Value" );
 
 	// ****************************
 	// Загружаем позиции вершин
@@ -71,9 +82,28 @@ void Brush::Create( TiXmlElement& Element )
 	}
 
 	// ****************************************************
-	// Загружаем текстурные координаты для карты освещения
+	// Загружаем текстурные координаты
 
 	TiXmlElement *xml_TexCoord;
+	xml_TexCoord = Element.FirstChildElement( "TextureCoords" );
+
+	if ( xml_TexCoord )
+	{
+		TiXmlElement *xml_Point = xml_TexCoord->FirstChildElement( "Point" );
+
+		while ( xml_Point )
+		{
+			TempVector2.x = static_cast< float >( atof( xml_Point->Attribute( "X" ) ) );
+			TempVector2.y = static_cast< float >( atof( xml_Point->Attribute( "Y" ) ) );
+
+			TexCoords_DiffuseMap.push_back( TempVector2 );
+			xml_Point = xml_Point->NextSiblingElement();
+		}
+	}
+
+	// ****************************************************
+	// Загружаем текстурные координаты для карты освещения
+
 	xml_TexCoord = Element.FirstChildElement( "TextureCoords_LightMap" );
 
 	if ( xml_TexCoord )
@@ -85,7 +115,7 @@ void Brush::Create( TiXmlElement& Element )
 			TempVector2.x = static_cast< float >( atof( xml_Point->Attribute( "X" ) ) );
 			TempVector2.y = static_cast< float >( atof( xml_Point->Attribute( "Y" ) ) );
 
-			TexCoords.push_back( TempVector2 );
+			TexCoords_LightMap.push_back( TempVector2 );
 			xml_Point = xml_Point->NextSiblingElement();
 		}
 	}
@@ -97,7 +127,8 @@ void Brush::Create( TiXmlElement& Element )
 	for ( size_t Id = 0, Face = 0, VertexInFace = 0; Id < IdVertex.size(); Id++, VertexInFace++ )
 	{
 		TempVertex.Position = Vertexs[ IdVertex[ Id ] ];
-		TempVertex.TextureCoord_LightMap = TexCoords[ Id ];
+		TempVertex.TextureCoord_DiffuseMap = TexCoords_DiffuseMap[ Id ];
+		TempVertex.TextureCoord_LightMap = TexCoords_LightMap[ Id ];
 
 		bool IsFindInArray = false;
 		for ( size_t i = 0; i < BrushVertexs.size(); i++ )
@@ -137,7 +168,7 @@ void Brush::Create( TiXmlElement& Element )
 	for ( size_t Face = 0; Face < 6; Face++ )
 	{
 		TempPlane = new Plane();
-		TempPlane->InitPlane( VertexBuffer, PlaneIdVertex[ Face ], PlaneVertex[ Face ] );
+		TempPlane->InitPlane( VertexBuffer, PlaneIdVertex[ Face ], PlaneVertex[ Face ], NameTexture );
 		Planes.push_back( TempPlane );
 	}
 }

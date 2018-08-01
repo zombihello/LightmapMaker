@@ -14,6 +14,7 @@ using namespace std;
 string Directories::WorkDirectory = "";
 string Directories::ShaderDirectory = "";
 string Directories::LogDirectory = "";
+string Directories::TexturesDirectory = "";
 string Directories::SaveLightmapDirectory = "";
 
 //-------------------------------------------------------------------------//

@@ -19,6 +19,7 @@
 struct BrushVertex
 {
 	glm::vec3		Position;
+	glm::vec2		TextureCoord_DiffuseMap;
 	glm::vec2		TextureCoord_LightMap;
 
 	bool operator==( BrushVertex& BrushVertex );

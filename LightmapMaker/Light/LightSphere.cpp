@@ -526,7 +526,7 @@ void LightSphere::InitSphere( const float& Radius )
 	this->Radius = Radius;
 	vector<glm::vec3> Vertexs = CreateSphere( Radius );
 
-	VAO.Create( Vertexs, OpenGL_API::VAO::Static_Draw, IdVertex, OpenGL_API::VAO::Static_Draw, 0, 0 );
+	VAO.Create( Vertexs, OpenGL_API::VAO::Static_Draw, IdVertex, OpenGL_API::VAO::Static_Draw, 0, 0, 0 );
 
 	Created = true;
 }

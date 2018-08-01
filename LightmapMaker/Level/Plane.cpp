@@ -5,11 +5,13 @@
 #include "BrushVertex.h"
 
 #define OFFSET_BRUSH_POSITION ( void* ) offsetof( BrushVertex, Position )
-#define OFFSET_BRUSH_TEXCOORD ( void* ) offsetof( BrushVertex, TextureCoord_LightMap )
+#define OFFSET_BRUSH_TEXCOORD0 ( void* ) offsetof( BrushVertex, TextureCoord_DiffuseMap )
+#define OFFSET_BRUSH_TEXCOORD1 ( void* ) offsetof( BrushVertex, TextureCoord_LightMap )
 
 //-------------------------------------------------------------------------//
 
 Plane::Plane() :
+	GL_DiffuseMap( 0 ),
 	GL_LightMap( 0 )
 {}
 
@@ -23,7 +25,7 @@ Plane::~Plane()
 
 //-------------------------------------------------------------------------//
 
-void Plane::InitPlane( const GLuint& VertexBuffer, const vector<unsigned int>& PlaneIdVertex, const vector<BrushVertex>& PlaneVertexes )
+void Plane::InitPlane( const GLuint& VertexBuffer, const vector<unsigned int>& PlaneIdVertex, const vector<BrushVertex>& PlaneVertexes, const string& NameTexture )
 {
 	int Flag = 0;
 	float Distance, X, Y, Z;
@@ -31,7 +33,7 @@ void Plane::InitPlane( const GLuint& VertexBuffer, const vector<unsigned int>& P
 	glm::vec3 Vect1, Vect2;
 
 	CountIndexs = PlaneIdVertex.size();
-	VAO.Create<BrushVertex>( VertexBuffer, PlaneIdVertex, OpenGL_API::VAO::Static_Draw, OFFSET_BRUSH_POSITION, OFFSET_BRUSH_TEXCOORD );
+	VAO.Create<BrushVertex>( VertexBuffer, PlaneIdVertex, OpenGL_API::VAO::Static_Draw, OFFSET_BRUSH_POSITION, OFFSET_BRUSH_TEXCOORD0, OFFSET_BRUSH_TEXCOORD1 );
 	
 	const BrushVertex* Vertex_A = &PlaneVertexes[ 0 ];
 	const BrushVertex* Vertex_B = &PlaneVertexes[ 1 ];
@@ -182,6 +184,7 @@ void Plane::InitPlane( const GLuint& VertexBuffer, const vector<unsigned int>& P
 	Edge1 = Vect1 - UVVector;
 	Edge2 = Vect2 - UVVector;
 
+	GL_DiffuseMap = ResourcesManager::GetGlTexture( NameTexture );
 	Data_LightMap.create( SizeLightmap.x, SizeLightmap.y );
 	GenerateGLTexture();
 }
@@ -192,9 +195,13 @@ void Plane::Render()
 {
 	VAO.Bind();
 
+	glActiveTexture( GL_TEXTURE0 );
+	glBindTexture( GL_TEXTURE_2D, GL_DiffuseMap );
+
+	glActiveTexture( GL_TEXTURE1 );
 	glBindTexture( GL_TEXTURE_2D, GL_LightMap );
+
 	glDrawElements( GL_TRIANGLES, CountIndexs, GL_UNSIGNED_INT, 0 );
-	glBindTexture( GL_TEXTURE_2D, 0 );
 
 	VAO.Unbind();
 }

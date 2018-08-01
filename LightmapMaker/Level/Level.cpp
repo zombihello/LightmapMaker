@@ -15,12 +15,12 @@ Level::~Level()
 
 bool Level::LoadLevel( const string& Route )
 {
-	PRINT_LOG( "*** Loading Level ***" );
+	PRINT_LOG( "*** Loading Level ***\n" );
 	TiXmlDocument Level;
 
 	if ( !Level.LoadFile( Route.c_str() ) )
 	{
-		PRINT_LOG( "Error: Level Not Found Or Not Currect Format" );
+		PRINT_LOG( "Error: Level Not Found Or Not Currect Format\n" );
 		return false;
 	}
 
@@ -29,7 +29,7 @@ bool Level::LoadLevel( const string& Route )
 
 	if ( !xml_Map )
 	{
-		PRINT_LOG( "Error: Not Correct Format In Level. Not Found Tag \"Map\"" );
+		PRINT_LOG( "Error: Not Correct Format In Level. Not Found Tag \"Map\"\n" );
 		return false;
 	}
 
@@ -70,6 +70,33 @@ bool Level::LoadLevel( const string& Route )
 	}
 
 	// ****************************
+	// Загружаем текстуры брашей
+
+	TiXmlElement *xml_Textures;
+	xml_Textures = xml_Map->FirstChildElement( "Textures" );
+	
+	PRINT_LOG( " - Load Textures\n" );
+
+	if ( xml_Textures )
+	{
+		TiXmlElement *xml_Texture;
+		string Name;
+		xml_Texture = xml_Textures->FirstChildElement( "Texture" );
+
+		while ( xml_Texture )
+		{
+			Name = xml_Texture->Attribute( "Name" );
+
+			ResourcesManager::LoadGlTexture( Name, Directories::TexturesDirectory + "\\" + Name );
+			xml_Texture = xml_Texture->NextSiblingElement();
+		}
+
+		PRINT_LOG( "\n" );
+	}
+	else
+		PRINT_LOG( "Warning: In Level [" << Route << "]. Not Found Tag \"Textures\"\n" );
+
+	// ****************************
 	// Загружаем твердые браши
 
 	TiXmlElement* xml_Brushes;
@@ -77,7 +104,7 @@ bool Level::LoadLevel( const string& Route )
 
 	if ( !xml_Brushes )
 	{
-		PRINT_LOG( "Error: Not Correct Format In Level. Not Found Tag \"Brushes\"" );
+		PRINT_LOG( "Error: Not Correct Format In Level. Not Found Tag \"Brushes\"\n" );
 		return false;
 	}
 
@@ -108,7 +135,7 @@ bool Level::LoadLevel( const string& Route )
 
 	if ( !xml_Entitys )
 	{
-		PRINT_LOG( "Error: Not Correct Format In Level. Not Found Tag \"Entitys\"" );
+		PRINT_LOG( "Error: Not Correct Format In Level. Not Found Tag \"Entitys\"\n" );
 		return false;
 	}
 
@@ -125,22 +152,22 @@ bool Level::LoadLevel( const string& Route )
 			PointLight PointLight( *xml_Entity );
 			PointLights.push_back( PointLight );
 
-			PRINT_LOG( " - Add Point Light" );
-			PRINT_LOG( "   Intensivity: " << PointLight.Intensivity );
-			PRINT_LOG( "   Radius: " << PointLight.Radius );
-			PRINT_LOG( "   Color: " << PointLight.Color.x * 255.f << ", " << PointLight.Color.y * 255.f << ", " << PointLight.Color.z * 255.f << ", " << PointLight.Color.w * 255.f );
-			PRINT_LOG( "   Position: " << PointLight.Position.x << ", " << PointLight.Position.y << ", " << PointLight.Position.z );
-			PRINT_LOG( "	****" );
-			PRINT_LOG( "" );
+			PRINT_LOG( " - Add Point Light\n" );
+			PRINT_LOG( "   Intensivity: " << PointLight.Intensivity << endl );
+			PRINT_LOG( "   Radius: " << PointLight.Radius << endl );
+			PRINT_LOG( "   Color: " << PointLight.Color.x * 255.f << ", " << PointLight.Color.y * 255.f << ", " << PointLight.Color.z * 255.f << ", " << PointLight.Color.w * 255.f << endl );
+			PRINT_LOG( "   Position: " << PointLight.Position.x << ", " << PointLight.Position.y << ", " << PointLight.Position.z << endl );
+			PRINT_LOG( "	****\n" );
+			PRINT_LOG( "\n" );
 		}
 
 		xml_Entity = xml_Entity->NextSiblingElement();
 	}
 
-	PRINT_LOG( " - Total Brushes: " << Brushes.size() );
-	PRINT_LOG( " - Total Triangles: " << Brushes.size() * 12 );
-	PRINT_LOG( " - Total Point Lights: " << PointLights.size() );
-	PRINT_LOG( "*** Level Loaded ***" );
+	PRINT_LOG( " - Total Brushes: " << Brushes.size() << endl );
+	PRINT_LOG( " - Total Planes: " << Brushes.size() * 6 << endl );
+	PRINT_LOG( " - Total Point Lights: " << PointLights.size() << endl );
+	PRINT_LOG( "*** Level Loaded ***\n" );
 	return true;
 }
 
@@ -152,6 +179,7 @@ void Level::Clear()
 		delete Brushes[ Id ];
 
 	Brushes.clear();
+	ResourcesManager::DeleteAllGlTexture();
 }
 
 //-------------------------------------------------------------------------//
