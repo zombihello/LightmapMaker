@@ -14,7 +14,12 @@
 ///////////////////////////
 // LIGHTMAPMAKER
 ///////////////////////////
+#include "../OpenGL/OpenGL.h"
 #include "../Level/Level.h"
+#include "../System/Camera.h"
+#include "../System/Logger.h"
+#include "../System/Directories.h"
+#include "../System/Error.h"
 
 class Lightmap
 {
@@ -26,8 +31,23 @@ public:
 	void Generate( sf::RenderWindow& Window );
 
 private:
+	/* Œ“–»—Œ¬¿“‹ —÷≈Õ” —Œ ¬«√Àﬂƒ¿ œ¿“◊¿ */
+	sf::Color PathRender();
 
-	vector<Plane*>		Planes;
+	/* Œ“–»—Œ¬¿“‹ —÷≈Õ” */
+	void RenderScene();
+
+	glm::mat4						Projection;
+	glm::mat4						PV; // Projection * View
+	glm::mat4						PVT; // Projection * View * Transform
+
+	OpenGL_API::RenderTexture		RenderTexture;
+	OpenGL_API::Shader				Shader_RenderPlane;
+	OpenGL_API::Shader				Shader_RenderLight;
+	Camera							Camera;
+
+	vector<Plane*>					Planes;
+	vector<PointLight>*				PointLights;
 };
 
 #endif // !LIGHTMAP_H

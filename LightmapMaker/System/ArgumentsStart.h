@@ -30,6 +30,7 @@ struct ArgumentsStart
 	
 	static unsigned int			MaxSizeLightmap;
 	static unsigned int			RadiosityNumberPasses;
+	static unsigned int			SizeRenderTexture;
 
 	static string				RouteToMap;
 };

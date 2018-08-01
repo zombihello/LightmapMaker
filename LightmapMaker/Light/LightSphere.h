@@ -45,7 +45,7 @@ public:
 	const glm::vec3& GetPosition();
 
 	/* ПОЛУЧИТЬ МАТРИЦУ ТРАНСФОРМАЦИИ */
-	const glm::mat4& GetTransformation();
+	glm::mat4& GetTransformation();
 
 	LightSphere& operator=( const LightSphere& Copy );
 

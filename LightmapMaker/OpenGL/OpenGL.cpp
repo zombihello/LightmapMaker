@@ -20,8 +20,7 @@ void OpenGL_API::InitOpenGL( sf::RenderWindow& RenderWindow )
 	ContextSettings.stencilBits = 8;
 	glewExperimental = GL_TRUE;
 
-	// TODO: [zombiHello] - 256 поменять на переменную отвечающую за размер RenderTexture
-	RenderWindow.create( sf::VideoMode( 800, 600 ), "", sf::Style::Default, ContextSettings );
+	RenderWindow.create( sf::VideoMode( ArgumentsStart::SizeRenderTexture, ArgumentsStart::SizeRenderTexture ), "", sf::Style::Default, ContextSettings );
 	//ShowWindow( RenderWindow.getSystemHandle(), false );
 
 	// Выводим данные об OpenGL

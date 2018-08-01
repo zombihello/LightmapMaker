@@ -3,11 +3,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LocalDebuggerWorkingDirectory>..\Bin</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>-size 16 -map test.lmap -savelog</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-size 16 -map test.lmap -rendersize 600 -savelog</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LocalDebuggerWorkingDirectory>..\Bin</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>-size 16 -map test.lmap -savelog</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-size 16 -map test.lmap -rendersize 600 -savelog</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

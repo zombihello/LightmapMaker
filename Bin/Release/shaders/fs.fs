@@ -3,8 +3,9 @@
 in vec2 out_TexCoord;
 
 out vec4 Color;
+uniform sampler2D LightMap;
 
 void main()
 {
-	Color = vec4( out_TexCoord.x, out_TexCoord.y, 0, 1 );
+	Color = texture( LightMap, out_TexCoord );
 }

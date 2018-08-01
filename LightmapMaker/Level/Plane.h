@@ -15,28 +15,51 @@
 // LIGHTMAPMAKER
 ///////////////////////////
 #include "../OpenGL/OpenGL.h"
-#include "Triangle.h"
+#include "../System/ArgumentsStart.h"
+#include "BrushVertex.h"
 
 class Plane
 {
 public:
+	/* КОНСТРУКТОР */
+	Plane();
+
+	/* ДЕСТРУКТОР */
+	~Plane();
+
 	/* ИНИЦИАЛИЗИРОВАТЬ ПЛОСКОСТЬ */
 	void InitPlane( const GLuint& VertexBuffer, const vector<unsigned int>& PlaneIdVertex, const vector<BrushVertex>& PlaneVertexes );
 
 	/* ОТРЕНДЕРИТЬ ПЛОСКОСТЬ */
 	void Render();
 
-	/* ПОЛУЧИТЬ ТРИУГОЛЬНИКИ ПЛОСКОСТИ */
-	vector<Triangle>& GetTriangles();
+	/* СГЕНЕРИРОВАТЬ OPENGL-ОВСКУЮ ТЕКСТУРУ С Data_LightMap */
+	void GenerateGLTexture();
+
+	/* ПОЛУЧИТЬ ПОЗИЦИЮ ФРАГМЕНТА В МИРЕ */
+	void GetPositionFragment( float UFactor, float VFactor, glm::vec3& PositionOut );
+
+	/* ПОЛУЧИТЬ РАЗМЕР КАРТЫ ОСВЕЩЕНИЯ */
+	glm::vec2& GetSizeLightmap();
+
+	/* ПОЛУЧИТЬ НОРМАЛЬ ПЛОСКОСТИ */
+	glm::vec3& GetNormal();
+
+	/* ПОЛУЧИТЬ КАРТУ ОСВЕЩЕНИЯ */
+	sf::Image& GetDataLightMap();
 
 private:
 	unsigned int			CountIndexs;
 
-	GLuint					LightMap;
+	GLuint					GL_LightMap;
+	sf::Image				Data_LightMap;
 	OpenGL_API::VAO			VAO;
 
-
-	vector<Triangle>		Triangles;
+	glm::vec2				SizeLightmap;
+	glm::vec3				Normal;
+	glm::vec3				UVVector;
+	glm::vec3				Edge1;
+	glm::vec3				Edge2;
 };
 
 #endif // !PLANE_H

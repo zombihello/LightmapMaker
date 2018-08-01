@@ -39,14 +39,11 @@ m_impl(NULL)
 {
 
 }
-
-
 ////////////////////////////////////////////////////////////
 RenderTexture::~RenderTexture()
 {
     delete m_impl;
 }
-
 
 ////////////////////////////////////////////////////////////
 bool RenderTexture::create(unsigned int width, unsigned int height, bool depthBuffer)

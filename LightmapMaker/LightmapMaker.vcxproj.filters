@@ -61,8 +61,8 @@
     <ClCompile Include="Light\Lightmap.cpp">
       <Filter>Light</Filter>
     </ClCompile>
-    <ClCompile Include="Level\Triangle.cpp">
-      <Filter>Level</Filter>
+    <ClCompile Include="OpenGL\RenderTexture.cpp">
+      <Filter>OpenGL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -112,8 +112,8 @@
     <ClInclude Include="Light\Lightmap.h">
       <Filter>Light</Filter>
     </ClInclude>
-    <ClInclude Include="Level\Triangle.h">
-      <Filter>Level</Filter>
+    <ClInclude Include="OpenGL\RenderTexture.h">
+      <Filter>OpenGL</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

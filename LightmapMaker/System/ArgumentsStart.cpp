@@ -12,6 +12,7 @@ bool ArgumentsStart::IsSaveLog = false;
 
 unsigned int ArgumentsStart::MaxSizeLightmap = 16;
 unsigned int ArgumentsStart::RadiosityNumberPasses = 3;
+unsigned int ArgumentsStart::SizeRenderTexture = 255;
 
 string ArgumentsStart::RouteToMap = "";
 
@@ -31,6 +32,7 @@ void ArgumentsStart::ShowHelp()
 		<< "\t -noshadow \t : Disable Shadows In Lightmaps\n"
 		<< "\t -numpasses # \t : The Number Of Passes For Building A Re-lighting\n"
 		<< "\t -savelog \t : Save Log In File\n"
+		<< "\t -rendersize # \t : Size Render Texture\n"
 		<< "\t -help \t\t : Show Help\n";
 }
 
@@ -53,6 +55,11 @@ void ArgumentsStart::InitArgumentsStart( int argc, char** argv )
 		else if ( strstr( argv[ i ], "-numpasses" ) && i + 1 < argc )
 		{
 			RadiosityNumberPasses = static_cast< unsigned int >( atof( argv[ i + 1 ] ) );
+			i++;
+		}
+		else if ( strstr( argv[ i ], "-rendersize" ) && i + 1 < argc )
+		{
+			SizeRenderTexture = static_cast< unsigned int >( atof( argv[ i + 1 ] ) );
 			i++;
 		}
 		else if ( strstr( argv[ i ], "-help" ) )

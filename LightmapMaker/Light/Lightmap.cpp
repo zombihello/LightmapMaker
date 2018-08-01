@@ -1,15 +1,15 @@
 #include "Lightmap.h"
-
 #include <glm\gtx\transform.hpp>
-#include "..\System\Directories.h"
-#include "..\System\Camera.h"
-#include <Windows.h>
+
 //-------------------------------------------------------------------------//
 
 void Lightmap::InitLightmap( Level& Level )
 {
 	vector<Brush*>	Brushes = Level.GetBrushes();
 	vector<Plane*>*	BrushPlanes;
+
+	Projection = glm::perspective( glm::radians( 90.f ), 1.f, 0.1f, 1500.f );
+	RenderTexture.Create( ArgumentsStart::SizeRenderTexture, ArgumentsStart::SizeRenderTexture );
 
 	// ***********************************
 	// Разбиваем браши на плоскости
@@ -21,147 +21,153 @@ void Lightmap::InitLightmap( Level& Level )
 		for ( size_t Id_Plane = 0; Id_Plane < BrushPlanes->size(); Id_Plane++ )
 			Planes.push_back( BrushPlanes->at( Id_Plane ) );
 	}
+
+	PointLights = &Level.GetPointLights();
+
+	// ***********************************
+	// Загружаем шейдера
+
+	map<string, int> AttribLocation;
+	AttribLocation[ "Position" ] = 0;
+	AttribLocation[ "TexCoord" ] = 1;
+
+	Shader_RenderPlane.SetAttribLocation( AttribLocation );
+	Shader_RenderLight.SetAttribLocation( AttribLocation );
+
+	if ( !Shader_RenderPlane.LoadFromFile( Directories::ShaderDirectory + "\\vs.vs", Directories::ShaderDirectory + "\\fs.fs" ) )
+		Error( "Error Shader Load", "Error In Load Shader. Look Log File For Details", -1 );
+
+	if ( !Shader_RenderLight.LoadFromFile( Directories::ShaderDirectory + "\\vsl.vs", Directories::ShaderDirectory + "\\fsl.fs" ) )
+		Error( "Error Shader Load", "Error In Load Shader. Look Log File For Details", -1 );
 }
 
 //-------------------------------------------------------------------------//
 
-#include "../System/Logger.h"
-
-
 void Lightmap::Generate( sf::RenderWindow& Window )
 {
-	// ТЕСТОВЫЙ КОД ДЛЯ ПРОВЕРКИ РЕНДЕРА БРАШЕЙ И ТОЧЕЧНОГО ИСТОЧНИКА СВЕТА
-
 	sf::Event Event;
-	sf::Vector2i MousePosition, CenterWindow( 800 / 2, 600 / 2 );
-	glm::vec3 Position = glm::vec3( 0, 0, 0 ), Direction;
-	glm::vec2 Angle;
-	glm::mat4 Pojection = glm::perspective( glm::radians( 90.f ), 1.f, 0.1f, 1500.f );
-	Camera Camera( Position, glm::vec3( -64, 0, -64 ), glm::vec3( 0, 1, 0 ) );
-	map<string, int> Attrib;
-
-	Attrib[ "Position" ] = 0;
-	Attrib[ "TexCoord" ] = 1;
-
-	OpenGL_API::Shader Shader( Attrib );
-	Shader.LoadFromFile( Directories::ShaderDirectory + "\\vs.vs", Directories::ShaderDirectory + "\\fs.fs" );
-
-	Attrib.clear();
-	Attrib[ "Position" ] = 0;
-
-	OpenGL_API::Shader ShaderLight( Attrib );
-	ShaderLight.LoadFromFile( Directories::ShaderDirectory + "\\vsl.vs", Directories::ShaderDirectory + "\\fsl.fs" );
+	glm::vec3 PositionFragment;
+	glm::vec2 SizeLightmap;
+	Plane* Plane;
 
 	glEnable( GL_DEPTH_TEST );
-	//glEnable( GL_CULL_FACE );
+	glEnable( GL_TEXTURE_2D );
+	Camera.SetAxisVertical( glm::vec3( 0, 1, 0 ) );	
 
-	//--------------------------------------------
+	// ****************************
+	// Генерируем карты освещения
 
-	glm::vec3 PositionFragment, Newedge1, Newedge2;
-	glm::vec2 UVFactor;
-	int Id = 0;
-	bool f = false;
+	for ( size_t RadiosityStep = 0; RadiosityStep < 3; RadiosityStep++ )
+	{
+		for ( size_t IdPlane = 0; IdPlane < Planes.size(); IdPlane++ )
+		{
+			Plane = Planes[ IdPlane ];
+			SizeLightmap = Plane->GetSizeLightmap();
 
-	float x = 0, y = 0;
+			for ( float x = 0; x < SizeLightmap.x; x++ )
+				for ( float y = 0; y < SizeLightmap.y; y++ )
+				{
+					Plane->GetPositionFragment( ( x + 0.5f ) / SizeLightmap.x, ( y + 0.5f ) / SizeLightmap.y, PositionFragment );
 
-	Triangle* Triangle = &Planes[ 0 ]->GetTriangles()[ 0 ];
-	UVFactor = glm::vec2( 0.5f / Triangle->SizeLightmap.x, 0.5f / Triangle->SizeLightmap.y );
+					Camera.SetPosition( PositionFragment );
+					Camera.SetTargetPoint( PositionFragment + Plane->GetNormal() );
 
-	Newedge1.x = Triangle->Edge1.x * UVFactor.x;
-	Newedge1.y = Triangle->Edge1.y * UVFactor.x;
-	Newedge1.z = Triangle->Edge1.z * UVFactor.x;
-	Newedge2.x = Triangle->Edge2.x * UVFactor.y;
-	Newedge2.y = Triangle->Edge2.y * UVFactor.y;
-	Newedge2.z = Triangle->Edge2.z * UVFactor.y;
+					Plane->GetDataLightMap().setPixel( x, y, PathRender() );
+				}			
+		}
 
-	PositionFragment = Triangle->UVVector + Newedge2 + Newedge1;
+		for ( size_t IdPlane = 0; IdPlane < Planes.size(); IdPlane++ )
+			Planes[ IdPlane ]->GenerateGLTexture();
+	}
 
-	//--------------------------------------------
+	for ( size_t IdPlane = 0; IdPlane < Planes.size(); IdPlane++ )
+	{
+		Plane = Planes[ IdPlane ];
+		Plane->GetDataLightMap().saveToFile( Directories::SaveLightmapDirectory + "\\lm_" + to_string( IdPlane ) + ".png" );
+	}
+
+	Camera.SetPosition( glm::vec3( 0, 0, 0 ) );
+	Camera.SetTargetPoint( glm::vec3( -64, 0, -64 ) );
+	glm::vec3 Position;
 
 	while ( Window.isOpen() )
 	{
 		while ( Window.pollEvent( Event ) )
 			if ( Event.type == sf::Event::Closed )
-				Window.close();		
+				Window.close();
 
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::E ) && !f )
-		{
-			Id++;
-			f = true;
-
-			if ( Id < Planes.size() )
-			{
-				Triangle = &Planes[ Id ]->GetTriangles()[ 0 ];
-				UVFactor = glm::vec2( 0.5f / Triangle->SizeLightmap.x, 0.5f / Triangle->SizeLightmap.y );
-
-				Newedge1.x = Triangle->Edge1.x * UVFactor.x;
-				Newedge1.y = Triangle->Edge1.y * UVFactor.x;
-				Newedge1.z = Triangle->Edge1.z * UVFactor.x;
-				Newedge2.x = Triangle->Edge2.x * UVFactor.y;
-				Newedge2.y = Triangle->Edge2.y * UVFactor.y;
-				Newedge2.z = Triangle->Edge2.z * UVFactor.y;
-
-				PositionFragment = Triangle->UVVector + Newedge2 + Newedge1;
-			}
-		}
-		else if ( !sf::Keyboard::isKeyPressed( sf::Keyboard::E ) && f )
-			f = false;
-
 		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::A ) )
-			PositionFragment.x -= 0.05;
+			Position.x -= 0.05;
 
 		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::D ) )
-			PositionFragment.x += 0.05;
+			Position.x += 0.05;
 
 		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::W ) )
-			PositionFragment.z += 0.05;
+			Position.z += 0.05;
 
 		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::S ) )
-			PositionFragment.z -= 0.05;
+			Position.z -= 0.05;
 
-		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Escape ) )
-			Window.close();
+		Camera.SetPosition( Position );
 
-		Camera.SetPosition( PositionFragment );
+		PV = Projection * Camera.GetViewMatrix();
+		Shader_RenderPlane.SetUniform( "PV", PV );
 
-		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Q ) )
-		{
-			MousePosition = sf::Mouse::getPosition( Window );
+		OpenGL_API::Shader::Bind( &Shader_RenderPlane );
 
-			float OffsetX = ( MousePosition.x - CenterWindow.x ) * 0.15;
-			float OffsetY = ( CenterWindow.y - MousePosition.y ) * 0.15;
-
-			Angle.x += glm::radians( OffsetX );
-			Angle.y += glm::radians( OffsetY );
-
-			if ( Angle.y < -1.55f )
-				Angle.y = -1.55f;
-			else if ( Angle.y > 1.55f )
-				Angle.y = 1.55f;
-
-			Direction.x = glm::cos( Angle.x ) * glm::cos( Angle.y );
-			Direction.y = glm::sin( Angle.y );
-			Direction.z = glm::sin( Angle.x ) * glm::cos( Angle.y );
-			Direction = glm::normalize( Direction );
-
-			Camera.SetTargetPoint( PositionFragment + Direction );
-			sf::Mouse::setPosition( CenterWindow, Window );
-		}
-		else
-			Camera.SetTargetPoint( PositionFragment + Triangle->Normal );
-
-		glm::mat4 PV = Pojection * Camera.GetViewMatrix();
-		Shader.SetUniform( "PV", PV );
-
-		OpenGL_API::Shader::Bind( &Shader );
 		for ( size_t i = 0; i < Planes.size(); i++ )
 			Planes[ i ]->Render();
-		OpenGL_API::Shader::Bind( NULL );
 
+		OpenGL_API::Shader::Bind( NULL );
 		Window.display();
 	}
+}
+
+//-------------------------------------------------------------------------//
+
+sf::Color Lightmap::PathRender()
+{
+	RenderTexture.Bind();
+	RenderScene();
+	RenderTexture.Unbind();
+
+	glm::vec3 ColorPixel = RenderTexture.GetMediumColorTexture();
+	PRINT_LOG( ColorPixel.x << " " << ColorPixel.y << " " << ColorPixel.z );
+	return sf::Color( ColorPixel.x * 255.f, ColorPixel.y * 255.f, ColorPixel.z * 255.f, 255.f );
+}
+
+//-------------------------------------------------------------------------//
+
+void Lightmap::RenderScene()
+{
+	PV = Projection * Camera.GetViewMatrix();
+	Shader_RenderPlane.SetUniform( "PV", PV );
+
+	// ****************************
+	// Рендерим плоскости брашей
+
+	OpenGL_API::Shader::Bind( &Shader_RenderPlane );
+
+	for ( size_t i = 0; i < Planes.size(); i++ )
+		Planes[ i ]->Render();
+
+	// ****************************
+	// Рендерим источники света
+
+	OpenGL_API::Shader::Bind( &Shader_RenderLight );
+
+	for ( size_t i = 0; i < PointLights->size(); i++ )
+	{
+		PVT = PV * PointLights->at( i ).LightSphere.GetTransformation();
+		Shader_RenderLight.SetUniform( "PV", PVT );
+		Shader_RenderLight.SetUniform( "Color", PointLights->at( i ).Color );
+
+		PointLights->at( i ).LightSphere.Render();
+	}
+
+	OpenGL_API::Shader::Bind( NULL );
 }
 
 //-------------------------------------------------------------------------//

@@ -292,7 +292,7 @@
 <Position X="80" Y="48" Z="-48"/>
 <Value Name="Name" Value=""/>
 <Value Name="Color" Value="255 255 255"/>
-<Value Name="Radius" Value="50"/>
+<Value Name="Radius" Value="20"/>
 <Value Name="Intensivity" Value="1"/>
 </Entity>
 </Entitys>

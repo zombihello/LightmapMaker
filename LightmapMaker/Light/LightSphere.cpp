@@ -572,7 +572,7 @@ const glm::vec3& LightSphere::GetPosition()
 
 //-------------------------------------------------------------------------//
 
-const glm::mat4& LightSphere::GetTransformation()
+glm::mat4& LightSphere::GetTransformation()
 {
 	return Transformation;
 }
