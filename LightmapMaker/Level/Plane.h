@@ -17,7 +17,9 @@
 #include "../OpenGL/OpenGL.h"
 #include "../System/ArgumentsStart.h"
 #include "../System/ResourcesManager.h"
+#include "../System/Ray.h"
 #include "BrushVertex.h"
+#include "Triangle.h"
 
 class Plane
 {
@@ -40,28 +42,23 @@ public:
 	/* ПОЛУЧИТЬ ПОЗИЦИЮ ФРАГМЕНТА В МИРЕ */
 	void GetPositionFragment( float UFactor, float VFactor, glm::vec3& PositionOut );
 
-	/* ПОЛУЧИТЬ РАЗМЕР КАРТЫ ОСВЕЩЕНИЯ */
-	glm::vec2& GetSizeLightmap();
+	/* ПЕРЕСИКАЕТ ЛИ ЛУЧ ПЛОСКОСТЬ */
+	bool IsRayIntersect( Ray& Ray );
 
-	/* ПОЛУЧИТЬ НОРМАЛЬ ПЛОСКОСТИ */
-	glm::vec3& GetNormal();
+	bool operator!=( Plane& Plane );
 
-	/* ПОЛУЧИТЬ КАРТУ ОСВЕЩЕНИЯ */
-	sf::Image& GetDataLightMap();
+	GLuint					GL_LightMap;
+	GLuint					GL_DiffuseMap;
+	sf::Image				Data_LightMap;
+
+	glm::u8vec2*			SizeLightmap;
+	glm::vec3*				Normal;
 
 private:
 	unsigned int			CountIndexs;
-
-	GLuint					GL_DiffuseMap;
-	GLuint					GL_LightMap;
-	sf::Image				Data_LightMap;
+	
+	Triangle				Triangles[ 2 ];
 	OpenGL_API::VAO			VAO;
-
-	glm::vec2				SizeLightmap;
-	glm::vec3				Normal;
-	glm::vec3				UVVector;
-	glm::vec3				Edge1;
-	glm::vec3				Edge2;
 };
 
 #endif // !PLANE_H

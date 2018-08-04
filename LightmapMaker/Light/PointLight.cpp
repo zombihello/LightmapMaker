@@ -15,17 +15,7 @@ using namespace std;
 PointLight::PointLight() :
 	Intensivity( 1.f ),
 	Radius( 25.f ),
-	Color( 0.6f, 0.6f, 0.6f, 1.f )
-{}
-
-//-------------------------------------------------------------------------//
-
-PointLight::PointLight( const PointLight& Copy ) :
-	Intensivity( Copy.Intensivity ),
-	Radius( Copy.Radius ),
-	Position( Copy.Position ),
-	Color( Copy.Color ),
-	LightSphere( Copy.LightSphere )
+	Color( 153.f, 153.f, 153.f )
 {}
 
 //-------------------------------------------------------------------------//
@@ -33,7 +23,7 @@ PointLight::PointLight( const PointLight& Copy ) :
 PointLight::PointLight( TiXmlElement& Element ) :
 	Intensivity( 1.f ),
 	Radius( 25.f ),
-	Color( 0.6f, 0.6f, 0.6f, 1.f )
+	Color( 153.f, 153.f, 153.f )
 {
 	// ***************************************** //
 	// Загружаем позицию источника в мире
@@ -71,10 +61,9 @@ PointLight::PointLight( TiXmlElement& Element ) :
 
 				switch ( IdComp )
 				{
-				case 0: Color.x = static_cast< float >( atof( TempString.c_str() ) ) / 255.f; break;
-				case 1: Color.y = static_cast< float >( atof( TempString.c_str() ) ) / 255.f; break;
-				case 2: Color.z = static_cast< float >( atof( TempString.c_str() ) ) / 255.f; break;
-				case 3: Color.w = static_cast< float >( atof( TempString.c_str() ) ) / 255.f; break;
+				case 0: Color.x = static_cast< float >( atof( TempString.c_str() ) ); break;
+				case 1: Color.y = static_cast< float >( atof( TempString.c_str() ) ); break;
+				case 2: Color.z = static_cast< float >( atof( TempString.c_str() ) ); break;
 				}
 
 				TempString.clear();
@@ -88,22 +77,16 @@ PointLight::PointLight( TiXmlElement& Element ) :
 
 		xlm_Value = xlm_Value->NextSiblingElement();
 	}
-
-	LightSphere.InitSphere( Radius );
-	LightSphere.SetPosition( Position );
 }
 
 //-------------------------------------------------------------------------//
 
-PointLight& PointLight::operator=( const PointLight& Copy )
+float PointLight::CalculateAttenuation( float Distance )
 {
-	Intensivity = Copy.Intensivity;
-	Radius = Copy.Radius;
-	Position = Copy.Position;
-	Color = Copy.Color;
-	LightSphere = Copy.LightSphere;
+	float LinearCoeff = ( 2.0f * Distance ) / Radius;
+	float QuadCoeff = Distance * Distance / ( Radius * Radius );
 
-	return *this;
+	return 1.0f / ( 1.0f + LinearCoeff + QuadCoeff );
 }
 
 //-------------------------------------------------------------------------//

@@ -31,6 +31,8 @@ struct ArgumentsStart
 	static void ShowHelp();
 
 	static bool					IsSaveLog;
+	static bool					IsNoShadow;
+	static bool					IsNoRadiosity;
 	
 	static unsigned int			MaxSizeLightmap;
 	static unsigned int			RadiosityNumberPasses;

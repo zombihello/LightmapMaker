@@ -76,7 +76,6 @@ bool OpenGL_API::RenderTexture::Create( size_t Width, size_t Height )
 	glFramebufferRenderbuffer( GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, DepthBuffer );
 
 	glDrawBuffer( GL_COLOR_ATTACHMENT0 );
-	glReadBuffer( GL_COLOR_ATTACHMENT0 );
 
 	// ***************************************** //
 	// Проверяем статус FBO, создан ли он без ошибок
@@ -95,7 +94,7 @@ bool OpenGL_API::RenderTexture::Create( size_t Width, size_t Height )
 	else
 	{
 		IsCreate = true;
-		NumLevelsMipmap = 1 + floor( log2( glm::max( Width, Height ) ) );
+		NumLevelsMipmap = floor( log2( glm::max( Width, Height ) ) );
 		Size = glm::vec2( Width, Height );
 	}
 
@@ -108,16 +107,12 @@ bool OpenGL_API::RenderTexture::Create( size_t Width, size_t Height )
 
 //-------------------------------------------------------------------------//
 
-glm::vec3 OpenGL_API::RenderTexture::GetMediumColorTexture()
+sf::Color OpenGL_API::RenderTexture::GetMediumColorTexture()
 {
-	glm::vec3 ColorPixel;
-
 	glBindTexture( GL_TEXTURE_2D, Texture );
-	glGenerateMipmap( GL_TEXTURE_2D );
-	glGetTexImage( GL_TEXTURE_2D, NumLevelsMipmap - 1, GL_RGB, GL_FLOAT, &ColorPixel );
+	glGetTexImage( GL_TEXTURE_2D, NumLevelsMipmap, GL_RGB, GL_FLOAT, &MediumColor );
 
-	glBindTexture( GL_TEXTURE_2D, 0 );
-	return ColorPixel;
+	return sf::Color( MediumColor.x * 255.f, MediumColor.y * 255.f, MediumColor.z * 255.f, 255.f );
 }
 
 //-------------------------------------------------------------------------//

@@ -169,10 +169,12 @@
     <ClCompile Include="Level\BrushVertex.cpp" />
     <ClCompile Include="Level\Level.cpp" />
     <ClCompile Include="Level\Plane.cpp" />
+    <ClCompile Include="Level\Triangle.cpp" />
     <ClCompile Include="LightmapMaker.cpp" />
+    <ClCompile Include="Light\DirectionalLight.cpp" />
     <ClCompile Include="Light\Lightmap.cpp" />
-    <ClCompile Include="Light\LightSphere.cpp" />
     <ClCompile Include="Light\PointLight.cpp" />
+    <ClCompile Include="Light\SpotLight.cpp" />
     <ClCompile Include="OpenGL\OpenGL.cpp" />
     <ClCompile Include="OpenGL\RenderTexture.cpp" />
     <ClCompile Include="OpenGL\Shader.cpp" />
@@ -182,7 +184,9 @@
     <ClCompile Include="System\Directories.cpp" />
     <ClCompile Include="System\Error.cpp" />
     <ClCompile Include="System\Logger.cpp" />
+    <ClCompile Include="System\Ray.cpp" />
     <ClCompile Include="System\ResourcesManager.cpp" />
+    <ClCompile Include="System\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BuildNumber.h" />
@@ -190,9 +194,11 @@
     <ClInclude Include="Level\BrushVertex.h" />
     <ClInclude Include="Level\Level.h" />
     <ClInclude Include="Level\Plane.h" />
+    <ClInclude Include="Level\Triangle.h" />
+    <ClInclude Include="Light\DirectionalLight.h" />
     <ClInclude Include="Light\Lightmap.h" />
-    <ClInclude Include="Light\LightSphere.h" />
     <ClInclude Include="Light\PointLight.h" />
+    <ClInclude Include="Light\SpotLight.h" />
     <ClInclude Include="OpenGL\OpenGL.h" />
     <ClInclude Include="OpenGL\RenderTexture.h" />
     <ClInclude Include="OpenGL\Shader.h" />
@@ -202,7 +208,9 @@
     <ClInclude Include="System\Directories.h" />
     <ClInclude Include="System\Error.h" />
     <ClInclude Include="System\Logger.h" />
+    <ClInclude Include="System\Ray.h" />
     <ClInclude Include="System\ResourcesManager.h" />
+    <ClInclude Include="System\Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

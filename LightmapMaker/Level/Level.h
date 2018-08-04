@@ -25,6 +25,8 @@ using namespace std;
 ///////////////////////////
 #include "../System/ResourcesManager.h"
 #include "../Light/PointLight.h"
+#include "../Light/SpotLight.h"
+#include "../Light/DirectionalLight.h"
 #include "Brush.h"
 
 class Level
@@ -40,7 +42,7 @@ public:
 	void Clear();
 
 	/* ПОЛУЧИТЬ ЦВЕТ ОКРУЩАЮЩЕЙ СРЕДЫ */
-	const glm::vec4& GetAmbienceColor();
+	glm::vec3& GetAmbienceColor();
 
 	/* ПОЛУЧИТЬ БРАШИ УРОВНЯ */
 	vector<Brush*>& GetBrushes();
@@ -48,11 +50,19 @@ public:
 	/* ПОЛУЧИТЬ ТОЧЕЧНЫЕ ИСТОЧНИКИ СВЕТА */
 	vector<PointLight>& GetPointLights();
 
-private:
-	glm::vec4				AmbienceColor;
+	/* ПОЛУЧИТЬ ПРОЖЕКТОРНЫЕ ИСТОЧНИКИ СВЕТА */
+	vector<SpotLight>& GetSpotLights();
 
-	vector<Brush*>			Brushes;
-	vector<PointLight>		PointLights;
+	/* ПОЛУЧИТЬ НАПРАВЛЕНЫЕ ИСТОЧНИКИ СВЕТА */
+	vector<DirectionalLight>& GetDirectionalLights();
+
+private:
+	glm::vec3						AmbienceColor;
+
+	vector<Brush*>					Brushes;
+	vector<PointLight>				PointLights;
+	vector<SpotLight>				SpotLights;
+	vector<DirectionalLight>		DirectionalLights;
 };
 
 #endif // !LEVEL_H

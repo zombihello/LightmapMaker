@@ -20,6 +20,7 @@
 #include "../System/Logger.h"
 #include "../System/Directories.h"
 #include "../System/Error.h"
+#include "../System/Timer.h"
 
 class Lightmap
 {
@@ -34,23 +35,28 @@ public:
 	void Generate();
 
 private:
-	/* ОТРИСОВАТЬ СЦЕНУ СО ВЗГЛЯДА ПАТЧА */
-	sf::Color PathRender();
+	/* СГЕНЕРИРОВАТЬ ПЕРВИЧНОЕ ОСВЕЩЕНИЕ */
+	void GeneratePrimaryIllumination();
+
+	/* СГЕНЕРИРОВАТЬ ВТОРИЧНОЕ ОСВЕЩЕНИЕ */
+	void GenerateSecondaryLight();
 
 	/* ОТРИСОВАТЬ СЦЕНУ */
 	void RenderScene();
 
-	glm::mat4						Projection;
-	glm::mat4						PV; // Projection * View
-	glm::mat4						PVT; // Projection * View * Transform
+	glm::vec3								AmbienceColor;
+	glm::mat4								Projection;
+	glm::mat4								PV; // Projection * View
 
-	OpenGL_API::RenderTexture		RenderTexture;
-	OpenGL_API::Shader*				Shader_RenderPlane;
-	OpenGL_API::Shader*				Shader_RenderLight;
-	Camera							Camera;
+	OpenGL_API::RenderTexture				RenderTexture;
+	OpenGL_API::Shader*						Shader_RenderPlane;
+	Camera									Camera;
 
-	vector<Plane*>					Planes;
-	vector<PointLight>*				PointLights;
+	vector<Plane*>							Planes;
+	map< GLuint, vector<Plane*> >			PlanesRender;
+	vector<PointLight>*						PointLights;
+	vector<SpotLight>*						SpotLights;
+	vector<DirectionalLight>*				DirectionalLights;
 };
 
 #endif // !LIGHTMAP_H

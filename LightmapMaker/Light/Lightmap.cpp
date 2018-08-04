@@ -25,7 +25,7 @@ void Lightmap::InitLightmap( Level& Level )
 	vector<Brush*>	Brushes = Level.GetBrushes();
 	vector<Plane*>*	BrushPlanes;
 
-	Projection = glm::perspective( glm::radians( 90.f ), 1.f, 0.1f, 1500.f );
+	Projection = glm::perspective( glm::radians( 90.f ), 1.f, 0.1f, 1000.f );
 	RenderTexture.Create( ArgumentsStart::SizeRenderTexture, ArgumentsStart::SizeRenderTexture );
 
 	// ***********************************
@@ -36,13 +36,20 @@ void Lightmap::InitLightmap( Level& Level )
 		BrushPlanes = &Brushes[ Id_Brush ]->GetPlanes();
 
 		for ( size_t Id_Plane = 0; Id_Plane < BrushPlanes->size(); Id_Plane++ )
-			Planes.push_back( BrushPlanes->at( Id_Plane ) );
+		{
+			Plane* Plane = BrushPlanes->at( Id_Plane );
+			Planes.push_back( Plane );
+			PlanesRender[ Plane->GL_DiffuseMap ].push_back( Plane );
+		}
 	}
 
+	AmbienceColor = Level.GetAmbienceColor();
 	PointLights = &Level.GetPointLights();
+	SpotLights = &Level.GetSpotLights();
+	DirectionalLights = &Level.GetDirectionalLights();
 
 	// ***********************************
-	// Загружаем шейдера
+	// Загружаем шейдер для рендера сцены
 
 	map<string, int> AttribLocation;
 	AttribLocation[ "Position" ] = 0;
@@ -50,13 +57,9 @@ void Lightmap::InitLightmap( Level& Level )
 	AttribLocation[ "TexCoord1" ] = 2;
 
 	Shader_RenderPlane = ResourcesManager::CreateShader( "RenderPlane" );
-	Shader_RenderLight = ResourcesManager::CreateShader( "RenderLight" );
-
 	Shader_RenderPlane->SetAttribLocation( AttribLocation );
-	Shader_RenderLight->SetAttribLocation( AttribLocation );
 
-	if ( !Shader_RenderPlane->LoadFromFile( Directories::ShaderDirectory + "\\vs.vs", Directories::ShaderDirectory + "\\fs.fs" ) ||
-		!Shader_RenderLight->LoadFromFile( Directories::ShaderDirectory + "\\vsl.vs", Directories::ShaderDirectory + "\\fsl.fs" ) )
+	if ( !Shader_RenderPlane->LoadFromFile( Directories::ShaderDirectory + "\\RenderPlane.vs", Directories::ShaderDirectory + "\\RenderPlane.fs" ) )
 		Error( "Error Shader Load", "Error In Load Shader. Look Log File For Details", -1 );
 
 	Shader_RenderPlane->SetUniform( "DiffuseMap", 0 );
@@ -69,112 +72,297 @@ void Lightmap::Generate()
 {
 	PRINT_LOG( "*** Lightmaps Generate ***\n" );
 
-	stringstream		StreamMessage;
-	glm::vec3			PositionFragment, NormalizeCenter, Right;
-	glm::vec2			SizeLightmap;
-	Plane*				Plane;
-	size_t				CountPlanes = Planes.size() * ArgumentsStart::RadiosityNumberPasses;
-	size_t				ReadyPlanes = 0;
+	PRINT_LOG( " - Generate Primary Illumination\n" );
+	GeneratePrimaryIllumination();
 
-	glEnable( GL_DEPTH_TEST );
-	Camera.SetAxisVertical( glm::vec3( 0, 1, 0 ) );
-
-	// ****************************
-	// Генерируем карты освещения
-
-	for ( size_t RadiosityStep = 0; RadiosityStep < ArgumentsStart::RadiosityNumberPasses; RadiosityStep++ )
+	if ( !ArgumentsStart::IsNoRadiosity )
 	{
-		for ( size_t IdPlane = 0; IdPlane < Planes.size(); IdPlane++, ReadyPlanes++ )
-		{
-			StreamMessage.str( "" );
-			StreamMessage << "| Radiosity Step: " << RadiosityStep + 1 << "/" << ArgumentsStart::RadiosityNumberPasses;
-
-			Logger::PrintProgressBar( ReadyPlanes, CountPlanes, 30, StreamMessage.str() );
-
-
-			Plane = Planes[ IdPlane ];
-			SizeLightmap = Plane->GetSizeLightmap();
-
-			for ( float x = 0; x < SizeLightmap.x; x++ )
-				for ( float y = 0; y < SizeLightmap.y; y++ )
-				{
-					Plane->GetPositionFragment( ( x + 0.5f ) / SizeLightmap.x, ( y + 0.5f ) / SizeLightmap.y, PositionFragment );
-
-					Camera.SetPosition( PositionFragment );
-					Camera.SetTargetPoint( PositionFragment + Plane->GetNormal() );
-
-					NormalizeCenter = glm::normalize( Camera.GetTargetPoint() );
-					Right = glm::normalize( glm::cross( glm::vec3( 0, 1, 0 ), NormalizeCenter ) );
-
-					Camera.SetAxisVertical( glm::normalize( glm::cross( NormalizeCenter, Right ) ) );
-
-					Plane->GetDataLightMap().setPixel( ( size_t ) x, ( size_t ) y, PathRender() );
-				}
-		}
-
 		for ( size_t IdPlane = 0; IdPlane < Planes.size(); IdPlane++ )
 			Planes[ IdPlane ]->GenerateGLTexture();
+
+		PRINT_LOG( "\n" );
+		PRINT_LOG( " - Generate Secondary Light\n" );
+		GenerateSecondaryLight();
 	}
 
 	for ( size_t IdPlane = 0; IdPlane < Planes.size(); IdPlane++ )
-	{
-		Plane = Planes[ IdPlane ];
-		Plane->GetDataLightMap().saveToFile( Directories::SaveLightmapDirectory + "\\lm_" + to_string( IdPlane ) + ".png" );
-	}
-
-	StreamMessage.str( "" );
-	StreamMessage << "| Radiosity Step: " << ArgumentsStart::RadiosityNumberPasses << "/" << ArgumentsStart::RadiosityNumberPasses;
-	Logger::PrintProgressBar( CountPlanes, CountPlanes, 30, StreamMessage.str() );
-	END_LOG;
+		Planes[ IdPlane ]->Data_LightMap.saveToFile( Directories::SaveLightmapDirectory + "\\lm_" + to_string( IdPlane ) + ".png" );
 
 	PRINT_LOG( "*** Lightmaps Generated ***\n" );
 }
 
 //-------------------------------------------------------------------------//
 
-sf::Color Lightmap::PathRender()
+void Lightmap::GeneratePrimaryIllumination()
 {
-	RenderTexture.Bind();
-	RenderScene();
-	RenderTexture.Unbind();
+	float			Distance = 0, DiffuseFactor = 0, SpotFactor = 0, Attenuation = 0, MaxValue = 0;
+	glm::vec2		UVFactor;
+	glm::vec3		Newedge1, Newedge2, PositionFragment;
+	stringstream	StreamMessage;
+	size_t			CountPlanes = Planes.size(), ReadyPlanes = 0;
+	Ray				Ray;
+	Timer			Timer;
+	Time			Time;
 
-	glm::vec3 ColorPixel = RenderTexture.GetMediumColorTexture();
-	return sf::Color( ColorPixel.x * 255.f, ColorPixel.y * 255.f, ColorPixel.z * 255.f, 255.f );
+	// ******************************
+	// Выводим прогресс бар начала
+
+	Logger::PrintProgressBar( 0, CountPlanes, 30, "" );
+
+	for ( size_t Id = 0; Id < Planes.size(); Id++ )
+	{
+		Plane* Plane = Planes[ Id ];
+		Timer.Start();
+
+		// **************************************************
+		// Просчитываем освещение для каждого
+		// пикселя карты освещения
+
+		for ( size_t x = 0; x < Plane->SizeLightmap->x; x++ )
+			for ( size_t y = 0; y < Plane->SizeLightmap->y; y++ )
+			{
+				Plane->GetPositionFragment( ( ( float ) x + 0.5f ) / Plane->SizeLightmap->x, ( ( float ) y + 0.5f ) / Plane->SizeLightmap->y, PositionFragment );
+
+				glm::vec3 Color;
+
+				// ************************************
+				// Просчитываем точечное освещение
+
+				for ( size_t IdPointLights = 0; IdPointLights < PointLights->size(); IdPointLights++ )
+				{
+					PointLight* PointLight = &PointLights->at( IdPointLights );
+					Ray.SetRay( PointLight->Position, PositionFragment );
+
+					if ( !ArgumentsStart::IsNoShadow )
+					{
+						bool IsIntersect = false;
+						for ( size_t IdPlane = 0; IdPlane < Planes.size() && !IsIntersect; IdPlane++ )
+							if ( *Planes[ IdPlane ] != *Plane )
+								IsIntersect = Planes[ IdPlane ]->IsRayIntersect( Ray );
+
+						if ( IsIntersect ) continue;
+					}
+
+					Distance = glm::length( Ray.Direction );
+					DiffuseFactor = glm::max( glm::dot( *Plane->Normal, Ray.Normalize_Direction ), 0.0f );
+					Attenuation = PointLight->CalculateAttenuation( Distance );
+
+					Color += ( PointLight->Color + AmbienceColor ) *Attenuation * DiffuseFactor * PointLight->Intensivity;
+				}
+
+				// ************************************
+				// Просчитываем прожекторное освещение
+
+				for ( size_t IdSpotLights = 0; IdSpotLights < SpotLights->size(); IdSpotLights++ )
+				{
+					SpotLight* SpotLight = &SpotLights->at( IdSpotLights );
+					Ray.SetRay( SpotLight->Position, PositionFragment );
+
+					if ( !ArgumentsStart::IsNoShadow )
+					{
+						bool IsIntersect = false;
+						for ( size_t IdPlane = 0; IdPlane < Planes.size() && !IsIntersect; IdPlane++ )
+							if ( *Planes[ IdPlane ] != *Plane )
+								IsIntersect = Planes[ IdPlane ]->IsRayIntersect( Ray );
+
+						if ( IsIntersect ) continue;
+					}
+
+					Distance = glm::length( Ray.Direction );
+					DiffuseFactor = glm::max( glm::dot( *Plane->Normal, Ray.Normalize_Direction ), 0.0f );
+					SpotFactor = glm::dot( SpotLight->SpotDirection, -Ray.Normalize_Direction );
+					SpotFactor = glm::clamp( ( SpotFactor - SpotLight->SpotCutoff ) / ( 1.0f - SpotLight->SpotCutoff ), 0.0f, 1.0f );
+					Attenuation = SpotLight->CalculateAttenuation( Distance );
+
+					Color += ( SpotLight->Color + AmbienceColor ) * Attenuation * DiffuseFactor * SpotFactor * SpotLight->Intensivity;
+				}
+
+				// ************************************
+				// Просчитываем направленное освещение
+
+				for ( size_t IdDirectionalLights = 0; IdDirectionalLights < DirectionalLights->size(); IdDirectionalLights++ )
+				{
+					DirectionalLight* DirectionalLight = &DirectionalLights->at( IdDirectionalLights );
+					Ray.SetRay( DirectionalLight->Position + PositionFragment, PositionFragment );
+
+					if ( !ArgumentsStart::IsNoShadow )
+					{
+						bool IsIntersect = false;
+						for ( size_t IdPlane = 0; IdPlane < Planes.size() && !IsIntersect; IdPlane++ )
+							if ( *Planes[ IdPlane ] != *Plane )
+								IsIntersect = Planes[ IdPlane ]->IsRayIntersect( Ray );
+
+						if ( IsIntersect ) continue;
+					}
+
+					DiffuseFactor = glm::max( glm::dot( glm::normalize( DirectionalLight->Position ), *Plane->Normal ), 0.0f );
+					Color += ( DirectionalLight->Color + AmbienceColor ) * DirectionalLight->Intensivity * DiffuseFactor;
+				}
+
+				// **************************************************
+				// Нормализуем цветовые каналы и заносим цвет
+				// в пиксель карты освещения
+
+				MaxValue = glm::max( Color.x, glm::max( Color.y, Color.z ) );
+
+				if ( MaxValue > 255.f )
+				{
+					float Value = 255.f / MaxValue;
+					Color.x *= Value;
+					Color.y *= Value;
+					Color.z *= Value;
+				}
+
+				Plane->Data_LightMap.setPixel( x, y, sf::Color( Color.x, Color.y, Color.z, 255 ) );
+			}
+
+		// **************************************************
+		// Выводим прогресс бар и сколько время осталось
+		// до конца (время приблизительное)
+
+		Timer.End();
+		Time = Timer.GetTime() * ( CountPlanes - ReadyPlanes );
+
+		StreamMessage.str( "" );
+		StreamMessage << " | Time Left: "
+			<< setw( 2 ) << setfill( '0' ) << Time.Hours << ":"
+			<< setw( 2 ) << setfill( '0' ) << Time.Minutes << ":"
+			<< setw( 2 ) << setfill( '0' ) << Time.Seconds;
+		Logger::PrintProgressBar( Id, CountPlanes, 30, StreamMessage.str() );
+	}
+
+	Logger::PrintProgressBar( CountPlanes, CountPlanes, 30, "                      " );
+	END_LOG;
+}
+
+//-------------------------------------------------------------------------//
+
+void Lightmap::GenerateSecondaryLight()
+{
+	stringstream		StreamMessage;
+	glm::vec3			PositionFragment, NormalizeCenter, Center, Right;
+	Plane*				Plane;
+	size_t				CountPlanes = Planes.size() * ArgumentsStart::RadiosityNumberPasses, ReadyPlanes = 0;
+	Timer				Timer;
+	Time				Time;
+
+	glEnable( GL_DEPTH_TEST );
+	glEnable( GL_CULL_FACE );
+	glEnable( GL_TEXTURE_2D );
+
+	// ****************************
+	// Генерируем карты освещения
+
+	RenderTexture.Bind();
+	Logger::PrintProgressBar( 0, CountPlanes, 30, "" );
+
+	for ( size_t RadiosityStep = 0; RadiosityStep < ArgumentsStart::RadiosityNumberPasses; RadiosityStep++ )
+	{
+		for ( size_t IdPlane = 0; IdPlane < Planes.size(); IdPlane++, ReadyPlanes++ )
+		{
+			Timer.Start();
+			Plane = Planes[ IdPlane ];
+
+			// **************************************************
+			// Рендерим сцену со взгляда патча и заносим
+			// средний цвет в пиксель карты освещения
+
+			for ( size_t x = 0; x < Plane->SizeLightmap->x; ++x )
+				for ( size_t y = 0; y < Plane->SizeLightmap->y; ++y )
+				{
+					Plane->GetPositionFragment( ( ( float ) x + 0.5f ) / Plane->SizeLightmap->x, ( ( float ) y + 0.5f ) / Plane->SizeLightmap->y, PositionFragment );
+
+					Center = PositionFragment + *Plane->Normal;
+					NormalizeCenter = glm::normalize( Center );
+					Right = glm::normalize( glm::cross( glm::vec3( 0, 1, 0 ), NormalizeCenter ) );
+
+					Camera.SetPosition( PositionFragment );
+					Camera.SetTargetPoint( Center );
+					Camera.SetAxisVertical( glm::normalize( glm::cross( NormalizeCenter, Right ) ) );
+
+					RenderScene();
+
+					Plane->Data_LightMap.setPixel( x, y, Plane->Data_LightMap.getPixel( x, y ) + RenderTexture.GetMediumColorTexture() );
+				}
+
+			// **************************************************
+			// Выводим прогресс бар, какой шаг радиосити и
+			// сколько время осталось до конца (время приблизительное)
+
+			Timer.End();
+			Time = Timer.GetTime() * ( CountPlanes - ReadyPlanes );
+
+			StreamMessage.str( "" );
+			StreamMessage << "| Radiosity Step: "
+				<< RadiosityStep + 1 << "/" << ArgumentsStart::RadiosityNumberPasses
+				<< " | Time Left: "
+				<< setw( 2 ) << setfill( '0' ) << Time.Hours << ":"
+				<< setw( 2 ) << setfill( '0' ) << Time.Minutes << ":"
+				<< setw( 2 ) << setfill( '0' ) << Time.Seconds;
+			Logger::PrintProgressBar( ReadyPlanes, CountPlanes, 30, StreamMessage.str() );
+		}
+
+		// **************************************************
+		// Обновляем карты освещения в OpenGL'e
+
+		for ( size_t IdPlane = 0; IdPlane < Planes.size(); IdPlane++ )
+			Planes[ IdPlane ]->GenerateGLTexture();
+	}
+
+	glBindTexture( GL_TEXTURE_2D, 0 );
+	RenderTexture.Unbind();
+	Logger::PrintProgressBar( CountPlanes, CountPlanes, 30, "                      " );
+	END_LOG;
+
+	glDisable( GL_DEPTH_TEST );
+	glDisable( GL_CULL_FACE );
+	glDisable( GL_TEXTURE_2D );
 }
 
 //-------------------------------------------------------------------------//
 
 void Lightmap::RenderScene()
 {
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+
 	PV = Projection * Camera.GetViewMatrix();
-	Shader_RenderPlane->SetUniform( "PV", PV );
+	Shader_RenderPlane->SetUniform( "PVMatrix", PV );
 
 	// ****************************
-	// Рендерим плоскости брашей
-
-	glEnable( GL_TEXTURE_2D );
-	glEnable( GL_CULL_FACE );
+	// Рендерим сцену
 
 	OpenGL_API::Shader::Bind( Shader_RenderPlane );
 
-	for ( size_t i = 0; i < Planes.size(); i++ )
-		Planes[ i ]->Render();
+	glCullFace( GL_BACK );
+	Shader_RenderPlane->SetUniform( "IsCullBack", true );
 
-	glDisable( GL_CULL_FACE );
-	glDisable( GL_TEXTURE_2D );
-
-	// ****************************
-	// Рендерим источники света
-
-	OpenGL_API::Shader::Bind( Shader_RenderLight );
-
-	for ( size_t i = 0; i < PointLights->size(); i++ )
+	for ( auto It = PlanesRender.begin(); It != PlanesRender.end(); It++ )
 	{
-		PVT = PV * PointLights->at( i ).LightSphere.GetTransformation();
-		Shader_RenderLight->SetUniform( "PV", PVT );
-		Shader_RenderLight->SetUniform( "Color", PointLights->at( i ).Color );
+		glActiveTexture( GL_TEXTURE0 );
+		glBindTexture( GL_TEXTURE_2D, It->first );
 
-		PointLights->at( i ).LightSphere.Render();
+		for ( size_t Id = 0; Id < It->second.size(); Id++ )
+		{
+			Plane* Plane = It->second[ Id ];
+
+			glActiveTexture( GL_TEXTURE1 );
+			glBindTexture( GL_TEXTURE_2D, Plane->GL_LightMap );
+
+			Plane->Render();
+		}
+	}
+
+	// *************************************************
+	// Рендерим сцену на изнанку, чтобы 
+	// убрать "заползание" света сквозь геометрию
+
+	Shader_RenderPlane->SetUniform( "IsCullBack", false );
+	glCullFace( GL_FRONT );
+
+	for ( auto It = PlanesRender.begin(); It != PlanesRender.end(); It++ )
+	{
+		for ( size_t Id = 0; Id < It->second.size(); Id++ )
+			It->second[ Id ]->Render();
 	}
 
 	OpenGL_API::Shader::Bind( NULL );

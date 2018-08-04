@@ -14,6 +14,7 @@
 ///////////////////////////
 // СИСТЕМНЫЕ БИБЛИОТЕКИ
 ///////////////////////////
+#include <SFML\Graphics.hpp>
 #include <glew\glew.h>
 #include <glm\glm.hpp>
 
@@ -35,7 +36,7 @@ namespace OpenGL_API
 		bool Create( size_t Width, size_t Height );
 
 		/* ПОЛУЧИТЬ УСРЕДНЕНЫЙ ЦВЕТ ТЕКСТУРЫ */
-		glm::vec3 GetMediumColorTexture();
+		sf::Color GetMediumColorTexture();
 
 		/* АКТИВИРОВАТЬ ТЕКСТУРУ ДЛЯ РЕНДЕРА В НЕЕ */
 		void Bind();
@@ -51,6 +52,7 @@ namespace OpenGL_API
 		int				NumLevelsMipmap;
 
 		glm::vec2		Size;
+		glm::vec3		MediumColor;
 
 		GLuint			FrameBuffer;
 		GLuint			Texture;

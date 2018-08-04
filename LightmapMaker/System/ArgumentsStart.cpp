@@ -8,10 +8,12 @@
 //-------------------------------------------------------------------------//
 
 bool ArgumentsStart::IsSaveLog = false;
+bool ArgumentsStart::IsNoShadow = false;
+bool ArgumentsStart::IsNoRadiosity = false;
 
 unsigned int ArgumentsStart::MaxSizeLightmap = 16;
 unsigned int ArgumentsStart::RadiosityNumberPasses = 3;
-unsigned int ArgumentsStart::SizeRenderTexture = 128;
+unsigned int ArgumentsStart::SizeRenderTexture = 32;
 
 string ArgumentsStart::RouteToMap = "";
 
@@ -27,11 +29,13 @@ void ArgumentsStart::ShowHelp()
 		<< "lm.exe -map [File.lmap] -textures [Route To Directory With Textures] <Other Options>\n\n"
 		<< "--- Options ---\n\n"
 		<< "\t -map # \t : Route To Map *.lmap\n"
-		<< "\t -size # \t : Max Size Lightmap\n"
+		<< "\t -maxsize # \t : Max Size Lightmap\n"
 		<< "\t -numpasses # \t : The Number Of Passes For Building A Re-lighting\n"
-		<< "\t -savelog \t : Save Log In File\n"
 		<< "\t -rendersize # \t : Size Render Texture\n"
 		<< "\t -textures # \t : Route To Directory With Textures\n"
+		<< "\t -savelog \t : Save Log In File\n"
+		<< "\t -noshadows \t : Disable Shadows\n"
+		<< "\t -noradiosity \t : Disable Secondary Light\n"
 		<< "\t -help \t\t : Show Help\n";
 }
 
@@ -46,7 +50,7 @@ void ArgumentsStart::InitArgumentsStart( int argc, char** argv )
 			RouteToMap = argv[ i + 1 ];
 			i++;
 		}
-		else if ( strstr( argv[ i ], "-size" ) && i + 1 < argc )
+		else if ( strstr( argv[ i ], "-maxsize" ) && i + 1 < argc )
 		{
 			MaxSizeLightmap = static_cast< unsigned int >( atof( argv[ i + 1 ] ) );
 			i++;
@@ -78,6 +82,8 @@ void ArgumentsStart::InitArgumentsStart( int argc, char** argv )
 		}
 
 		else if ( strstr( argv[ i ], "-savelog" ) )		IsSaveLog = true;
+		else if ( strstr( argv[ i ], "-noshadows" ) ) IsNoShadow = true;
+		else if ( strstr( argv[ i ], "-noradiosity" ) ) IsNoRadiosity = true;
 	}
 }
 

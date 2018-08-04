@@ -57,10 +57,9 @@ bool Level::LoadLevel( const string& Route )
 
 					switch ( IdComp )
 					{
-					case 0: this->AmbienceColor.x = static_cast< float >( atof( TempString.c_str() ) ) / 255.f; break;
-					case 1: this->AmbienceColor.y = static_cast< float >( atof( TempString.c_str() ) ) / 255.f; break;
-					case 2: this->AmbienceColor.z = static_cast< float >( atof( TempString.c_str() ) ) / 255.f; break;
-					case 3: this->AmbienceColor.w = static_cast< float >( atof( TempString.c_str() ) ) / 255.f; break;
+					case 0: this->AmbienceColor.x = static_cast< float >( atof( TempString.c_str() ) ); break;
+					case 1: this->AmbienceColor.y = static_cast< float >( atof( TempString.c_str() ) ); break;
+					case 2: this->AmbienceColor.z = static_cast< float >( atof( TempString.c_str() ) ); break;
 					}
 
 					TempString.clear();
@@ -74,7 +73,7 @@ bool Level::LoadLevel( const string& Route )
 
 	TiXmlElement *xml_Textures;
 	xml_Textures = xml_Map->FirstChildElement( "Textures" );
-	
+
 	PRINT_LOG( " - Load Textures\n" );
 
 	if ( xml_Textures )
@@ -149,14 +148,43 @@ bool Level::LoadLevel( const string& Route )
 
 		if ( NameEntity == "Static_Light" )
 		{
-			PointLight PointLight( *xml_Entity );
-			PointLights.push_back( PointLight );
+			PointLights.push_back( PointLight( *xml_Entity ) );
+			PointLight* PointLight = &PointLights[ PointLights.size() - 1 ];
 
 			PRINT_LOG( " - Add Point Light\n" );
-			PRINT_LOG( "   Intensivity: " << PointLight.Intensivity << endl );
-			PRINT_LOG( "   Radius: " << PointLight.Radius << endl );
-			PRINT_LOG( "   Color: " << PointLight.Color.x * 255.f << ", " << PointLight.Color.y * 255.f << ", " << PointLight.Color.z * 255.f << ", " << PointLight.Color.w * 255.f << endl );
-			PRINT_LOG( "   Position: " << PointLight.Position.x << ", " << PointLight.Position.y << ", " << PointLight.Position.z << endl );
+			PRINT_LOG( "   Intensivity: " << PointLight->Intensivity << endl );
+			PRINT_LOG( "   Radius: " << PointLight->Radius << endl );
+			PRINT_LOG( "   Color: " << PointLight->Color.x << ", " << PointLight->Color.y << ", " << PointLight->Color.z << endl );
+			PRINT_LOG( "   Position: " << PointLight->Position.x << ", " << PointLight->Position.y << ", " << PointLight->Position.z << endl );
+			PRINT_LOG( "	****\n" );
+			PRINT_LOG( "\n" );
+		}
+		else if ( NameEntity == "Static_SpotLight" )
+		{
+			SpotLights.push_back( SpotLight( *xml_Entity ) );
+			SpotLight* SpotLight = &SpotLights[ SpotLights.size() - 1 ];
+
+			PRINT_LOG( " - Add Spot Light\n" );
+			PRINT_LOG( "   Intensivity: " << SpotLight->Intensivity << endl );
+			PRINT_LOG( "   Radius: " << SpotLight->Radius << endl );
+			PRINT_LOG( "   Height: " << SpotLight->Height << endl );
+			PRINT_LOG( "   Spot Cutoff: " << SpotLight->SpotCutoff << endl );
+			PRINT_LOG( "   Position: " << SpotLight->Position.x << ", " << SpotLight->Position.y << ", " << SpotLight->Position.z << endl );
+			PRINT_LOG( "   Spot Direction: " << SpotLight->SpotDirection.x << ", " << SpotLight->SpotDirection.y << ", " << SpotLight->SpotDirection.z << endl );
+			PRINT_LOG( "   Rotation: " << SpotLight->Rotation.x << ", " << SpotLight->Rotation.y << ", " << SpotLight->Rotation.z << endl );
+			PRINT_LOG( "   Color: " << SpotLight->Color.x << ", " << SpotLight->Color.y << ", " << SpotLight->Color.z << endl );
+			PRINT_LOG( "	****\n" );
+			PRINT_LOG( "\n" );
+		}
+		else if ( NameEntity == "Static_DirectionalLight" )
+		{
+			DirectionalLights.push_back( DirectionalLight( *xml_Entity ) );
+			DirectionalLight* DirectionalLight = &DirectionalLights[ DirectionalLights.size() - 1 ];
+
+			PRINT_LOG( " - Add Directional Light\n" );
+			PRINT_LOG( "   Intensivity: " << DirectionalLight->Intensivity << endl );
+			PRINT_LOG( "   Color: " << DirectionalLight->Color.x << ", " << DirectionalLight->Color.y << ", " << DirectionalLight->Color.z << endl );
+			PRINT_LOG( "   Direction: " << DirectionalLight->Position.x << ", " << DirectionalLight->Position.y << ", " << DirectionalLight->Position.z << endl );
 			PRINT_LOG( "	****\n" );
 			PRINT_LOG( "\n" );
 		}
@@ -167,6 +195,8 @@ bool Level::LoadLevel( const string& Route )
 	PRINT_LOG( " - Total Brushes: " << Brushes.size() << endl );
 	PRINT_LOG( " - Total Planes: " << Brushes.size() * 6 << endl );
 	PRINT_LOG( " - Total Point Lights: " << PointLights.size() << endl );
+	PRINT_LOG( " - Total Spot Lights: " << SpotLights.size() << endl );
+	PRINT_LOG( " - Total Directional Lights: " << DirectionalLights.size() << endl );
 	PRINT_LOG( "*** Level Loaded ***\n" );
 	return true;
 }
@@ -184,7 +214,7 @@ void Level::Clear()
 
 //-------------------------------------------------------------------------//
 
-const glm::vec4& Level::GetAmbienceColor()
+glm::vec3& Level::GetAmbienceColor()
 {
 	return AmbienceColor;
 }
@@ -201,6 +231,20 @@ vector<Brush*>& Level::GetBrushes()
 vector<PointLight>& Level::GetPointLights()
 {
 	return PointLights;
+}
+
+//-------------------------------------------------------------------------//
+
+vector<SpotLight>& Level::GetSpotLights()
+{
+	return SpotLights;
+}
+
+//-------------------------------------------------------------------------//
+
+vector<DirectionalLight>& Level::GetDirectionalLights()
+{
+	return DirectionalLights;
 }
 
 //-------------------------------------------------------------------------//

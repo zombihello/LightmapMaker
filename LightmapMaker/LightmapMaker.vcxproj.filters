@@ -55,9 +55,6 @@
     <ClCompile Include="Light\PointLight.cpp">
       <Filter>Light</Filter>
     </ClCompile>
-    <ClCompile Include="Light\LightSphere.cpp">
-      <Filter>Light</Filter>
-    </ClCompile>
     <ClCompile Include="Light\Lightmap.cpp">
       <Filter>Light</Filter>
     </ClCompile>
@@ -66,6 +63,21 @@
     </ClCompile>
     <ClCompile Include="System\ResourcesManager.cpp">
       <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Ray.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="Level\Triangle.cpp">
+      <Filter>Level</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Timer.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\SpotLight.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\DirectionalLight.cpp">
+      <Filter>Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -109,9 +121,6 @@
     <ClInclude Include="Light\PointLight.h">
       <Filter>Light</Filter>
     </ClInclude>
-    <ClInclude Include="Light\LightSphere.h">
-      <Filter>Light</Filter>
-    </ClInclude>
     <ClInclude Include="Light\Lightmap.h">
       <Filter>Light</Filter>
     </ClInclude>
@@ -120,6 +129,21 @@
     </ClInclude>
     <ClInclude Include="System\ResourcesManager.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Ray.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Level\Triangle.h">
+      <Filter>Level</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Timer.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\SpotLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\DirectionalLight.h">
+      <Filter>Light</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
