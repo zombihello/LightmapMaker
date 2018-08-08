@@ -18,17 +18,27 @@
 #include <tinyxml.h>
 using namespace std;
 
+///////////////////////////
+// LIGHTMAPMAKER
+///////////////////////////
+#include "Sphere.h"
+
 struct PointLight
 {
 	/* КОНСТРУКТОР */
 	PointLight();
+	PointLight( const PointLight& Copy );
 	PointLight( TiXmlElement& Element );
 
 	/* ВЫЧИСЛИТЬ ЗАТУХАНИЕ СВЕТА */
 	float CalculateAttenuation( float Distance );
 
+	PointLight& operator=( const PointLight& Copy );
+
 	float				Intensivity;
 	float				Radius;
+
+	Sphere				Sphere;
 
 	glm::vec3			Position;
 	glm::vec3			Color;

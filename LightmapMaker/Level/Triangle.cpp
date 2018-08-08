@@ -100,19 +100,37 @@ void Triangle::InitTriangle( const glm::vec3& Vertex_A, const glm::vec3& Vertex_
 	// Задаем границы размера карты освещения
 
 	//TODO: [zombiHello] - 16 - это масштаб карты освещения для полгиноа. Нужно сделать, чтобы это значение считывалось с карты
-	SizeLightmap = glm::abs( UVMax - UVMin ) / 16.f;
+	glm::vec2 UVDelta = glm::abs( UVMax - UVMin );
+	SizeLightmap_PrimaryIllumination = UVDelta;
+	SizeLightmap_SecondaryLight = UVDelta / 4.f;
 
-	if ( SizeLightmap.x < 4 )
-		SizeLightmap.x = 4;
+	// ************************************************************************************
 
-	if ( SizeLightmap.y < 4 )
-		SizeLightmap.y = 4;
+	if ( SizeLightmap_PrimaryIllumination.x < 4 )
+		SizeLightmap_PrimaryIllumination.x = 4;
 
-	if ( SizeLightmap.x > ArgumentsStart::MaxSizeLightmap )
-		SizeLightmap.x = ArgumentsStart::MaxSizeLightmap;
+	if ( SizeLightmap_PrimaryIllumination.y < 4 )
+		SizeLightmap_PrimaryIllumination.y = 4;
 
-	if ( SizeLightmap.y > ArgumentsStart::MaxSizeLightmap )
-		SizeLightmap.y = ArgumentsStart::MaxSizeLightmap;
+	if ( SizeLightmap_PrimaryIllumination.x > ArgumentsStart::MaxSizeLightmap )
+		SizeLightmap_PrimaryIllumination.x = ArgumentsStart::MaxSizeLightmap;
+
+	if ( SizeLightmap_PrimaryIllumination.y > ArgumentsStart::MaxSizeLightmap )
+		SizeLightmap_PrimaryIllumination.y = ArgumentsStart::MaxSizeLightmap;
+
+	// ************************************************************************************
+
+	if ( SizeLightmap_SecondaryLight.x < 4 )
+		SizeLightmap_SecondaryLight.x = 4;
+
+	if ( SizeLightmap_SecondaryLight.y < 4 )
+		SizeLightmap_SecondaryLight.y = 4;
+
+	if ( SizeLightmap_SecondaryLight.x > ArgumentsStart::MaxSizeLightmap )
+		SizeLightmap_SecondaryLight.x = ArgumentsStart::MaxSizeLightmap;
+
+	if ( SizeLightmap_SecondaryLight.y > ArgumentsStart::MaxSizeLightmap )
+		SizeLightmap_SecondaryLight.y = ArgumentsStart::MaxSizeLightmap;
 
 	// ****************************
 	// Находим координаты

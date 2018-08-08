@@ -13,14 +13,14 @@ using namespace std;
 
 DirectionalLight::DirectionalLight() :
 	Intensivity( 1.f ),
-	Color( 153.f, 153.f, 153.f )
+	Color( 150.f, 150.f, 150.f )
 {}
 
 //-------------------------------------------------------------------------//
 
 DirectionalLight::DirectionalLight( TiXmlElement & ElementEntity ) :
 	Intensivity( 1.f ),
-	Color( 153.f, 153.f, 153.f )
+	Color( 150.f, 150.f, 150.f )
 {
 	// ***************************************** //
 	// Загружаем позицию источника в мире

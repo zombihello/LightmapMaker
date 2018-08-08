@@ -15,7 +15,17 @@ using namespace std;
 PointLight::PointLight() :
 	Intensivity( 1.f ),
 	Radius( 25.f ),
-	Color( 153.f, 153.f, 153.f )
+	Color( 150.f, 150.f, 150.f )
+{}
+
+//-------------------------------------------------------------------------//
+
+PointLight::PointLight( const PointLight& Copy ) :
+	Intensivity( Copy.Intensivity ),
+	Radius( Copy.Radius ),
+	Position( Copy.Position ),
+	Color( Copy.Color ),
+	Sphere( Copy.Sphere )
 {}
 
 //-------------------------------------------------------------------------//
@@ -23,7 +33,7 @@ PointLight::PointLight() :
 PointLight::PointLight( TiXmlElement& Element ) :
 	Intensivity( 1.f ),
 	Radius( 25.f ),
-	Color( 153.f, 153.f, 153.f )
+	Color( 150.f, 150.f, 150.f )
 {
 	// ***************************************** //
 	// Загружаем позицию источника в мире
@@ -77,6 +87,9 @@ PointLight::PointLight( TiXmlElement& Element ) :
 
 		xlm_Value = xlm_Value->NextSiblingElement();
 	}
+
+	Sphere.InitSphere( 55.f );
+	Sphere.SetPosition( Position );
 }
 
 //-------------------------------------------------------------------------//
@@ -87,6 +100,19 @@ float PointLight::CalculateAttenuation( float Distance )
 	float QuadCoeff = Distance * Distance / ( Radius * Radius );
 
 	return 1.0f / ( 1.0f + LinearCoeff + QuadCoeff );
+}
+
+//-------------------------------------------------------------------------//
+
+PointLight& PointLight::operator=( const PointLight& Copy )
+{
+	Intensivity = Copy.Intensivity;
+	Radius = Copy.Radius;
+	Position = Copy.Position;
+	Color = Copy.Color;
+	Sphere = Copy.Sphere;
+
+	return *this;
 }
 
 //-------------------------------------------------------------------------//

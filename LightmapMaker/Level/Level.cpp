@@ -154,7 +154,7 @@ bool Level::LoadLevel( const string& Route )
 			PRINT_LOG( " - Add Point Light\n" );
 			PRINT_LOG( "   Intensivity: " << PointLight->Intensivity << endl );
 			PRINT_LOG( "   Radius: " << PointLight->Radius << endl );
-			PRINT_LOG( "   Color: " << PointLight->Color.x << ", " << PointLight->Color.y << ", " << PointLight->Color.z << endl );
+			PRINT_LOG( "   Color: " << PointLight->Color.x * 255.f << ", " << PointLight->Color.y * 255.f << ", " << PointLight->Color.z * 255.f << endl );
 			PRINT_LOG( "   Position: " << PointLight->Position.x << ", " << PointLight->Position.y << ", " << PointLight->Position.z << endl );
 			PRINT_LOG( "	****\n" );
 			PRINT_LOG( "\n" );
@@ -172,7 +172,7 @@ bool Level::LoadLevel( const string& Route )
 			PRINT_LOG( "   Position: " << SpotLight->Position.x << ", " << SpotLight->Position.y << ", " << SpotLight->Position.z << endl );
 			PRINT_LOG( "   Spot Direction: " << SpotLight->SpotDirection.x << ", " << SpotLight->SpotDirection.y << ", " << SpotLight->SpotDirection.z << endl );
 			PRINT_LOG( "   Rotation: " << SpotLight->Rotation.x << ", " << SpotLight->Rotation.y << ", " << SpotLight->Rotation.z << endl );
-			PRINT_LOG( "   Color: " << SpotLight->Color.x << ", " << SpotLight->Color.y << ", " << SpotLight->Color.z << endl );
+			PRINT_LOG( "   Color: " << SpotLight->Color.x * 255.f << ", " << SpotLight->Color.y * 255.f << ", " << SpotLight->Color.z * 255.f << endl );
 			PRINT_LOG( "	****\n" );
 			PRINT_LOG( "\n" );
 		}
@@ -183,7 +183,7 @@ bool Level::LoadLevel( const string& Route )
 
 			PRINT_LOG( " - Add Directional Light\n" );
 			PRINT_LOG( "   Intensivity: " << DirectionalLight->Intensivity << endl );
-			PRINT_LOG( "   Color: " << DirectionalLight->Color.x << ", " << DirectionalLight->Color.y << ", " << DirectionalLight->Color.z << endl );
+			PRINT_LOG( "   Color: " << DirectionalLight->Color.x * 255.f << ", " << DirectionalLight->Color.y * 255.f << ", " << DirectionalLight->Color.z * 255.f << endl );
 			PRINT_LOG( "   Direction: " << DirectionalLight->Position.x << ", " << DirectionalLight->Position.y << ", " << DirectionalLight->Position.z << endl );
 			PRINT_LOG( "	****\n" );
 			PRINT_LOG( "\n" );

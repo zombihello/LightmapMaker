@@ -51,15 +51,21 @@ void Lightmap::InitLightmap( Level& Level )
 	// ***********************************
 	// Загружаем шейдер для рендера сцены
 
+	Shader_RenderPlane = ResourcesManager::CreateShader( "RenderPlane" );
+	Shader_RenderLight = ResourcesManager::CreateShader( "RenderLight" );
+
 	map<string, int> AttribLocation;
 	AttribLocation[ "Position" ] = 0;
 	AttribLocation[ "TexCoord0" ] = 1;
 	AttribLocation[ "TexCoord1" ] = 2;
-
-	Shader_RenderPlane = ResourcesManager::CreateShader( "RenderPlane" );
 	Shader_RenderPlane->SetAttribLocation( AttribLocation );
 
-	if ( !Shader_RenderPlane->LoadFromFile( Directories::ShaderDirectory + "\\RenderPlane.vs", Directories::ShaderDirectory + "\\RenderPlane.fs" ) )
+	AttribLocation.clear();
+	AttribLocation[ "Position" ] = 0;
+	Shader_RenderLight->SetAttribLocation( AttribLocation );
+
+	if ( !Shader_RenderPlane->LoadFromFile( Directories::ShaderDirectory + "\\RenderPlane.vs", Directories::ShaderDirectory + "\\RenderPlane.fs" ) ||
+		 !Shader_RenderLight->LoadFromFile( Directories::ShaderDirectory + "\\RenderLight.vs", Directories::ShaderDirectory + "\\RenderLight.fs" ) )
 		Error( "Error Shader Load", "Error In Load Shader. Look Log File For Details", -1 );
 
 	Shader_RenderPlane->SetUniform( "DiffuseMap", 0 );
@@ -67,6 +73,149 @@ void Lightmap::InitLightmap( Level& Level )
 }
 
 //-------------------------------------------------------------------------//
+
+void RESIZE( unsigned char* src, unsigned char* dest, int ws, int hs, int wd, int hd )
+{
+	int xx, yy;
+	int x, y;
+	int ixx, iyy;
+	int ix, iy;
+	int cx, cy;
+	int cxy, cc;
+	int pin, pout, p;
+	int b, g, r, a;
+	int *ikx, *iky;
+	int *kx, *ky;
+
+	cx = ( ws - 1 ) / wd + 2;
+	cy = ( hs - 1 ) / hd + 2;
+	x = cx * wd;
+	y = cy * hd;
+
+	ikx = ( int * ) _alloca( x * 4 );
+	iky = ( int * ) _alloca( y * 4 );
+	kx = ( int * ) _alloca( x * 4 );
+	ky = ( int * ) _alloca( y * 4 );
+
+	for ( xx = 0; xx < x; xx++ )
+	{
+		ikx[ xx ] = 0;
+		kx[ xx ] = 0;
+	}
+
+	for ( yy = 0; yy < y; yy++ )
+	{
+		iky[ yy ] = 0;
+		ky[ yy ] = 0;
+	}
+
+	if ( ws >= wd )
+	{
+		cxy = ws;
+		pin = 0; pout = 1; p = 0;
+		for ( ;;)
+		{
+			cc = pout * ws - pin * wd;
+			if ( cc >= wd )
+			{
+				kx[ p ] = wd;
+			}
+			else
+			{
+				kx[ p ] = cc;
+				ikx[ p ] = pin;
+				p = pout * cx;
+				pout += 1;
+				kx[ p ] = wd - cc;
+			}
+			ikx[ p ] = pin;
+			pin += 1;
+			if ( pin >= ws ) break;
+			p += 1;
+		}
+	}
+	else
+	{
+		cxy = wd;
+		for ( x = 0; x < wd; x++ )
+		{
+			p = x * 2;
+			kx[ p + 1 ] = x * ( ws - 1 ) % ( wd - 1 );
+			ikx[ p ] = x * ( ws - 1 ) / ( wd - 1 );
+			kx[ p ] = wd - kx[ p + 1 ];
+			ikx[ p + 1 ] = ( ikx[ p ] + 1 ) % ws;
+		}
+	}
+
+	if ( hs >= hd )
+	{
+		cxy *= hs;
+		pin = 0; pout = 1; p = 0;
+		for ( ;;)
+		{
+			cc = pout * hs - pin * hd;
+			if ( cc >= hd )
+			{
+				ky[ p ] = hd;
+			}
+			else
+			{
+				ky[ p ] = cc;
+				iky[ p ] = pin;
+				p = pout * cy;
+				pout += 1;
+				ky[ p ] = hd - cc;
+			}
+			iky[ p ] = pin;
+			pin += 1;
+			if ( pin >= hs ) break;
+			p += 1;
+		}
+	}
+	else
+	{
+		cxy *= hd;
+		for ( y = 0; y < hd; y++ )
+		{
+			p = y * 2;
+			ky[ p + 1 ] = y * ( hs - 1 ) % ( hd - 1 );
+			iky[ p ] = y * ( hs - 1 ) / ( hd - 1 );
+			ky[ p ] = hd - ky[ p + 1 ];
+			iky[ p + 1 ] = ( iky[ p ] + 1 ) % hs;
+		}
+	}
+
+	iyy = 0;
+	for ( yy = 0; yy < hd; yy++ )
+	{
+		ixx = 0;
+		for ( xx = 0; xx < wd; xx++ )
+		{
+			b = g = r = a = 0;
+			iy = iyy;
+			for ( y = 1; y <= cy; y++ )
+			{
+				ix = ixx;
+				for ( x = 1; x <= cx; x++ )
+				{
+					b += src[ ( ikx[ ix ] + iky[ iy ] * ws ) * 4 + 0 ] * kx[ ix ] * ky[ iy ];
+					g += src[ ( ikx[ ix ] + iky[ iy ] * ws ) * 4 + 1 ] * kx[ ix ] * ky[ iy ];
+					r += src[ ( ikx[ ix ] + iky[ iy ] * ws ) * 4 + 2 ] * kx[ ix ] * ky[ iy ];
+					a += src[ ( ikx[ ix ] + iky[ iy ] * ws ) * 4 + 3 ] * kx[ ix ] * ky[ iy ];
+					ix += 1;
+				}
+				iy += 1;
+			}
+			dest[ ( xx + yy * wd ) * 4 + 0 ] = b / cxy;
+			dest[ ( xx + yy * wd ) * 4 + 1 ] = g / cxy;
+			dest[ ( xx + yy * wd ) * 4 + 2 ] = r / cxy;
+			dest[ ( xx + yy * wd ) * 4 + 3 ] = a / cxy;
+			ixx += cx;
+		}
+		iyy += cy;
+	}
+	return;
+}
 
 void Lightmap::Generate()
 {
@@ -78,7 +227,21 @@ void Lightmap::Generate()
 	if ( !ArgumentsStart::IsNoRadiosity )
 	{
 		for ( size_t IdPlane = 0; IdPlane < Planes.size(); IdPlane++ )
+		{
+			Plane* Plane = Planes[ IdPlane ];
+			vector<unsigned char> Pixels( Plane->SizeLightmap_SecondaryLight->x * Plane->SizeLightmap_SecondaryLight->y * 4 );
+			RESIZE( ( unsigned char* ) Plane->LightMap_PrimaryIllumination.getPixelsPtr(), &Pixels[ 0 ], Plane->SizeLightmap_PrimaryIllumination->x, Plane->SizeLightmap_PrimaryIllumination->y, Plane->SizeLightmap_SecondaryLight->x, Plane->SizeLightmap_SecondaryLight->y );
+
+			for ( int x = 0; x < Plane->SizeLightmap_SecondaryLight->x; x++ )
+				for ( int y = 0; y < Plane->SizeLightmap_SecondaryLight->y; y++ )
+				{
+					unsigned char* Ptr = &Pixels[ ( x + y * Plane->SizeLightmap_SecondaryLight->x ) * 4 ];
+					Plane->LightMap_SecondaryLight.setPixel( x, y, sf::Color( Ptr[ 0 ], Ptr[ 1 ], Ptr[ 2 ], Ptr[ 3 ] ) );
+				}
+
 			Planes[ IdPlane ]->GenerateGLTexture();
+			//Planes[ IdPlane ]->LightMap_SecondaryLight.saveToFile( Directories::SaveLightmapDirectory + "\\lm_" + to_string( IdPlane ) + ".png" );
+		}
 
 		PRINT_LOG( "\n" );
 		PRINT_LOG( " - Generate Secondary Light\n" );
@@ -86,7 +249,24 @@ void Lightmap::Generate()
 	}
 
 	for ( size_t IdPlane = 0; IdPlane < Planes.size(); IdPlane++ )
-		Planes[ IdPlane ]->Data_LightMap.saveToFile( Directories::SaveLightmapDirectory + "\\lm_" + to_string( IdPlane ) + ".png" );
+	{
+		Plane* Plane = Planes[ IdPlane ];
+		vector<unsigned char> Pixels( Plane->SizeLightmap_PrimaryIllumination->x * Plane->SizeLightmap_PrimaryIllumination->y * 4 );
+		RESIZE( (unsigned char*) Plane->LightMap_SecondaryLight.getPixelsPtr(), &Pixels[0], Plane->SizeLightmap_SecondaryLight->x, Plane->SizeLightmap_SecondaryLight->y, Plane->SizeLightmap_PrimaryIllumination->x, Plane->SizeLightmap_PrimaryIllumination->y );
+
+		for ( int x = 0; x < Plane->SizeLightmap_PrimaryIllumination->x; x++ )
+			for ( int y = 0; y < Plane->SizeLightmap_PrimaryIllumination->y; y++ )
+			{
+				unsigned char* Ptr = &Pixels[ ( x + y * Plane->SizeLightmap_PrimaryIllumination->x ) * 4 ];
+
+				sf::Color Pixel_PrimaryIllumination = Plane->LightMap_PrimaryIllumination.getPixel( x, y );
+				sf::Color Pixel_SecondaryLight = sf::Color( Ptr[ 0 ], Ptr[ 1 ], Ptr[ 2 ], Ptr[3] );
+
+				Plane->LightMap_PrimaryIllumination.setPixel( x, y, Pixel_PrimaryIllumination + Pixel_SecondaryLight );
+			}
+
+		Planes[ IdPlane ]->LightMap_PrimaryIllumination.saveToFile( Directories::SaveLightmapDirectory + "\\lm_" + to_string( IdPlane ) + ".png" );
+	}
 
 	PRINT_LOG( "*** Lightmaps Generated ***\n" );
 }
@@ -118,10 +298,10 @@ void Lightmap::GeneratePrimaryIllumination()
 		// Просчитываем освещение для каждого
 		// пикселя карты освещения
 
-		for ( size_t x = 0; x < Plane->SizeLightmap->x; x++ )
-			for ( size_t y = 0; y < Plane->SizeLightmap->y; y++ )
+		for ( size_t x = 0; x < Plane->SizeLightmap_PrimaryIllumination->x; x++ )
+			for ( size_t y = 0; y < Plane->SizeLightmap_PrimaryIllumination->y; y++ )
 			{
-				Plane->GetPositionFragment( ( ( float ) x + 0.5f ) / Plane->SizeLightmap->x, ( ( float ) y + 0.5f ) / Plane->SizeLightmap->y, PositionFragment );
+				Plane->GetPositionFragment( ( ( float ) x + 0.5f ) / ( float ) Plane->SizeLightmap_PrimaryIllumination->x, ( ( float ) y + 0.5f ) / ( float ) Plane->SizeLightmap_PrimaryIllumination->y, PositionFragment );
 
 				glm::vec3 Color;
 
@@ -147,7 +327,7 @@ void Lightmap::GeneratePrimaryIllumination()
 					DiffuseFactor = glm::max( glm::dot( *Plane->Normal, Ray.Normalize_Direction ), 0.0f );
 					Attenuation = PointLight->CalculateAttenuation( Distance );
 
-					Color += ( PointLight->Color + AmbienceColor ) *Attenuation * DiffuseFactor * PointLight->Intensivity;
+					Color += ( PointLight->Color + AmbienceColor ) * Attenuation * DiffuseFactor * PointLight->Intensivity;
 				}
 
 				// ************************************
@@ -213,7 +393,7 @@ void Lightmap::GeneratePrimaryIllumination()
 					Color.z *= Value;
 				}
 
-				Plane->Data_LightMap.setPixel( x, y, sf::Color( Color.x, Color.y, Color.z, 255 ) );
+				Plane->LightMap_PrimaryIllumination.setPixel( x, y, sf::Color( Color.x, Color.y, Color.z, 255 ) );
 			}
 
 		// **************************************************
@@ -267,22 +447,22 @@ void Lightmap::GenerateSecondaryLight()
 			// Рендерим сцену со взгляда патча и заносим
 			// средний цвет в пиксель карты освещения
 
-			for ( size_t x = 0; x < Plane->SizeLightmap->x; ++x )
-				for ( size_t y = 0; y < Plane->SizeLightmap->y; ++y )
+			for ( size_t x = 0; x < Plane->SizeLightmap_SecondaryLight->x; x++ )
+				for ( size_t y = 0; y < Plane->SizeLightmap_SecondaryLight->y; y++ )
 				{
-					Plane->GetPositionFragment( ( ( float ) x + 0.5f ) / Plane->SizeLightmap->x, ( ( float ) y + 0.5f ) / Plane->SizeLightmap->y, PositionFragment );
+					Plane->GetPositionFragment( ( ( float ) x + 0.5f ) / Plane->SizeLightmap_SecondaryLight->x, ( ( float ) y + 0.5f ) / Plane->SizeLightmap_SecondaryLight->y, PositionFragment );
 
 					Center = PositionFragment + *Plane->Normal;
 					NormalizeCenter = glm::normalize( Center );
 					Right = glm::normalize( glm::cross( glm::vec3( 0, 1, 0 ), NormalizeCenter ) );
 
 					Camera.SetPosition( PositionFragment );
-					Camera.SetTargetPoint( Center );
+					Camera.SetTargetPoint( PositionFragment + *Plane->Normal );
 					Camera.SetAxisVertical( glm::normalize( glm::cross( NormalizeCenter, Right ) ) );
 
 					RenderScene();
 
-					Plane->Data_LightMap.setPixel( x, y, Plane->Data_LightMap.getPixel( x, y ) + RenderTexture.GetMediumColorTexture() );
+					Plane->LightMap_SecondaryLight.setPixel( x, y, Plane->LightMap_SecondaryLight.getPixel(x,y) + RenderTexture.GetMediumColorTexture() );
 				}
 
 			// **************************************************
@@ -328,12 +508,30 @@ void Lightmap::RenderScene()
 	PV = Projection * Camera.GetViewMatrix();
 	Shader_RenderPlane->SetUniform( "PVMatrix", PV );
 
+	glCullFace( GL_BACK );
+//	glDisable( GL_CULL_FACE );
+	//OpenGL_API::Shader::Bind( Shader_RenderLight );
+
+	//// ****************************
+	//// Рендерим источники света
+
+	//for ( size_t Id = 0; Id < PointLights->size(); Id++ )
+	//{
+	//	PointLight* PointLight = &( *PointLights )[ Id ];
+
+	//	PVT = PV * PointLight->Sphere.GetTransformation();
+	//	Shader_RenderLight->SetUniform( "PVTMatrix", PVT );
+	//	Shader_RenderLight->SetUniform( "Intensivity", PointLight->Intensivity );
+	//	Shader_RenderLight->SetUniform( "Light_Color", PointLight->Color );
+
+	//	PointLight->Sphere.Render();
+	//}
+
 	// ****************************
 	// Рендерим сцену
 
+//	glEnable( GL_CULL_FACE );
 	OpenGL_API::Shader::Bind( Shader_RenderPlane );
-
-	glCullFace( GL_BACK );
 	Shader_RenderPlane->SetUniform( "IsCullBack", true );
 
 	for ( auto It = PlanesRender.begin(); It != PlanesRender.end(); It++ )

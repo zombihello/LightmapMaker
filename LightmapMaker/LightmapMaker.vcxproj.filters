@@ -79,6 +79,9 @@
     <ClCompile Include="Light\DirectionalLight.cpp">
       <Filter>Light</Filter>
     </ClCompile>
+    <ClCompile Include="Light\Sphere.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BuildNumber.h" />
@@ -143,6 +146,9 @@
       <Filter>Light</Filter>
     </ClInclude>
     <ClInclude Include="Light\DirectionalLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\Sphere.h">
       <Filter>Light</Filter>
     </ClInclude>
   </ItemGroup>

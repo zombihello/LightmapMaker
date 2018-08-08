@@ -49,16 +49,20 @@ public:
 
 	GLuint					GL_LightMap;
 	GLuint					GL_DiffuseMap;
-	sf::Image				Data_LightMap;
 
-	glm::u8vec2*			SizeLightmap;
+	sf::Image				LightMap_PrimaryIllumination;
+	sf::Image				LightMap_SecondaryLight;
+
+	glm::u8vec2*			SizeLightmap_PrimaryIllumination;
+	glm::u8vec2*			SizeLightmap_SecondaryLight;
 	glm::vec3*				Normal;
-
+	
 private:
 	unsigned int			CountIndexs;
 	
-	Triangle				Triangles[ 2 ];
+
 	OpenGL_API::VAO			VAO;
+	Triangle				Triangles[ 2 ];
 };
 
 #endif // !PLANE_H

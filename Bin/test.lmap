@@ -1116,7 +1116,7 @@
 <Position X="48" Y="64" Z="-32"/>
 <Value Name="Name" Value=""/>
 <Value Name="Color" Value="255 255 255"/>
-<Value Name="Radius" Value="35"/>
+<Value Name="Radius" Value="40"/>
 <Value Name="Intensivity" Value="1"/>
 </Entity>
 </Entitys>

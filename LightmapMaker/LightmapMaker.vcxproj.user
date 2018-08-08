@@ -3,11 +3,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LocalDebuggerWorkingDirectory>..\Bin</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>-maxsize 128 -map test.lmap -rendersize 32 -savelog -numpasses 3 -textures "D:\\Projects\\C++\\GameEngine\\lifeEngine\\testBed\\exe\\textures"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-maxsize 256 -map test.lmap -rendersize 32 -savelog -numpasses 3 -textures "D:\\Projects\\C++\\GameEngine\\lifeEngine\\testBed\\exe\\textures"</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LocalDebuggerWorkingDirectory>..\Bin</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>-maxsize 128 -map test.lmap -rendersize 32 -savelog -numpasses 3 -textures "D:\\Projects\\C++\\GameEngine\\lifeEngine\\testBed\\exe\\textures"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-maxsize 256 -map test.lmap -rendersize 32 -savelog -numpasses 3 -textures "D:\\Projects\\C++\\GameEngine\\lifeEngine\\testBed\\exe\\textures"</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

@@ -47,9 +47,11 @@ private:
 	glm::vec3								AmbienceColor;
 	glm::mat4								Projection;
 	glm::mat4								PV; // Projection * View
+	glm::mat4								PVT; // Projection * View * Transformation
 
 	OpenGL_API::RenderTexture				RenderTexture;
 	OpenGL_API::Shader*						Shader_RenderPlane;
+	OpenGL_API::Shader*						Shader_RenderLight;
 	Camera									Camera;
 
 	vector<Plane*>							Planes;

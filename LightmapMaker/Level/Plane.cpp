@@ -13,7 +13,8 @@
 Plane::Plane() :
 	GL_DiffuseMap( 0 ),
 	GL_LightMap( 0 ),
-	SizeLightmap( NULL ),
+	SizeLightmap_PrimaryIllumination( NULL ),
+	SizeLightmap_SecondaryLight( NULL ),
 	Normal( NULL )
 {}
 
@@ -26,7 +27,7 @@ Plane::~Plane()
 }
 
 //-------------------------------------------------------------------------//
-
+#include "../System/Logger.h"
 void Plane::InitPlane( const GLuint& VertexBuffer, const vector<unsigned int>& PlaneIdVertex, const vector<BrushVertex>& PlaneVertexes, const string& NameTexture )
 {
 	CountIndexs = PlaneIdVertex.size();
@@ -35,11 +36,13 @@ void Plane::InitPlane( const GLuint& VertexBuffer, const vector<unsigned int>& P
 	Triangles[ 0 ].InitTriangle( PlaneVertexes[ 0 ].Position, PlaneVertexes[ 1 ].Position, PlaneVertexes[ 2 ].Position );
 	Triangles[ 1 ].InitTriangle( PlaneVertexes[ 3 ].Position, PlaneVertexes[ 4 ].Position, PlaneVertexes[ 5 ].Position );
 
-	SizeLightmap = &Triangles[ 0 ].SizeLightmap;
+	SizeLightmap_PrimaryIllumination = &Triangles[ 0 ].SizeLightmap_PrimaryIllumination;
+	SizeLightmap_SecondaryLight = &Triangles[ 0 ].SizeLightmap_SecondaryLight;
 	Normal = &Triangles[ 0 ].Normal;
 
 	GL_DiffuseMap = ResourcesManager::GetGlTexture( NameTexture );
-	Data_LightMap.create( Triangles[ 0 ].SizeLightmap.x, Triangles[ 0 ].SizeLightmap.y );
+	LightMap_PrimaryIllumination.create( SizeLightmap_PrimaryIllumination->x, SizeLightmap_PrimaryIllumination->y );
+	LightMap_SecondaryLight.create( SizeLightmap_SecondaryLight->x, SizeLightmap_SecondaryLight->y );
 	GenerateGLTexture();
 }
 
@@ -65,7 +68,7 @@ void Plane::GenerateGLTexture()
 	glGenTextures( 1, &GL_LightMap );
 	glBindTexture( GL_TEXTURE_2D, GL_LightMap );
 
-	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, Triangles[ 0 ].SizeLightmap.x, Triangles[ 0 ].SizeLightmap.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, Data_LightMap.getPixelsPtr() );
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, SizeLightmap_SecondaryLight->x, SizeLightmap_SecondaryLight->y, 0, GL_RGBA, GL_UNSIGNED_BYTE, LightMap_SecondaryLight.getPixelsPtr() );
 
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );

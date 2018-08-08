@@ -16,7 +16,7 @@ SpotLight::SpotLight() :
 	SpotCutoff( -1 ), // cos 180 градусов = -1
 	Radius( 25.f ),
 	Height( 45.f ),
-	Color( 153.f, 153.f, 153.f ),
+	Color( 150.f, 150.f, 150.f ),
 	SpotDirection( 0.f, -1.f, 0.f )
 {}
 
@@ -27,7 +27,7 @@ SpotLight::SpotLight( TiXmlElement& ElementEntity ) :
 	SpotCutoff( -1 ), // cos 180 градусов = -1
 	Radius( 25.f ),
 	Height( 45.f ),
-	Color( 153.f, 153.f, 153.f ),
+	Color( 150.f, 150.f, 150.f ),
 	SpotDirection( 0.f, -1.f, 0.f )
 {
 	// ***************************************** //
